@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Editar Cliente</h2>
+  {% if request.GET.id %}
+    <form method="POST">
+      {% csrf_token %}
+      {% with cliente=clientes|get_item:request.GET.id %}
+      <input type="hidden" name="id" value="{{ cliente.id }}">
+      <div class="mb-3"><label>Nombre:</label><input type="text" name="nombre" value="{{ cliente.nombre }}" class="form-control"></div>
+      <div class="mb-3"><label>Apellido:</label><input type="text" name="apellido" value="{{ cliente.apellido }}" class="form-control"></div>
+      <div class="mb-3"><label>Email:</label><input type="email" name="email" value="{{ cliente.email }}" class="form-control"></div>
+      <div class="mb-3"><label>Teléfono:</label><input type="text" name="telefono" value="{{ cliente.telefono }}" class="form-control"></div>
+      <button type="submit" class="btn btn-success">Actualizar</button>
+      {% endwith %}
+    </form>
+  {% else %}
+    <ul class="list-group">
+      {% for c in clientes %}
+      <li class="list-group-item d-flex justify-content-between">
+        {{ c.nombre }} {{ c.apellido }}
+        <a href="?id={{ c.id }}" class="btn btn-sm btn-primary">Editar</a>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No hay clientes disponibles.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

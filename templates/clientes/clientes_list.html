@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de Clientes</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .invitado { background-color: #fdf7d3 !important; }
+    table tr td, table tr th { vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Gestión de Clientes</h1>
+    <div class="text-end mb-3">
+      <a href="{% url 'clientes_create' %}" class="btn btn-success">➕ Crear Cliente</a>
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary">🏠 Volver al Panel</a>
+    </div>
+
+    <table class="table table-striped table-hover text-center shadow">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>RUT</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in clientes %}
+        <tr class="{% if cliente.email == 'invitado@demo.cl' %}invitado{% endif %}">
+          <td>{{ cliente.id_cliente }}</td>
+          <td>{{ cliente.nombre }}</td>
+          <td>{{ cliente.apellido }}</td>
+          <td>{{ cliente.email }}</td>
+          <td>{{ cliente.telefono }}</td>
+          <td>{{ cliente.direccion }}</td>
+          <td>{{ cliente.rut }}</td>
+          <td>
+            <a href="{% url 'clientes_detail' cliente.id_cliente %}" class="btn btn-info btn-sm">👁️ Ver</a>
+            <a href="{% url 'clientes_update' cliente.id_cliente %}" class="btn btn-warning btn-sm">✏️ Editar</a>
+            <a href="{% url 'clientes_delete' cliente.id_cliente %}" class="btn btn-danger btn-sm"
+               onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">🗑️ Eliminar</a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="8">No hay clientes registrados.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="text-center mt-5 bg-dark text-light p-3">
+    <p>Proyecto Espacio Raro | Panel de Clientes</p>
+  </footer>
+</body>
+</html>

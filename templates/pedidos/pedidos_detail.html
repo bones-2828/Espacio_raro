@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Detalles del Pedido #{{ pedido.id_pedido }}</h2>
+  <ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Cliente:</strong> {{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</li>
+    <li class="list-group-item"><strong>Estado:</strong> {{ pedido.estado }}</li>
+    <li class="list-group-item"><strong>Fechas:</strong> {{ pedido.fecha_inicio }} → {{ pedido.fecha_entrega }}</li>
+    <li class="list-group-item"><strong>Precio Total:</strong> ${{ pedido.precio_total }}</li>
+  </ul>
+
+  <h3>Productos en este pedido:</h3>
+  <table class="table table-bordered">
+    <thead><tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr></thead>
+    <tbody>
+      {% for detalle in detalles %}
+      <tr>
+        <td>{{ detalle.producto.nombre }}</td>
+        <td>{{ detalle.cantidad }}</td>
+        <td>${{ detalle.subtotal }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">No hay detalles registrados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <a href="{% url 'pedidos_list' %}" class="btn btn-secondary mt-3">Volver</a>
+</div>
+{% endblock %}

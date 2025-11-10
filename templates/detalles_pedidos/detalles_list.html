@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Detalles de Pedidos</h2>
+  <a href="{% url 'detalles_pedidos_create' %}" class="btn btn-success mb-3">➕ Añadir Detalle</a>
+
+  <table class="table table-striped text-center shadow">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Pedido</th>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Subtotal</th>
+        <th>Email Usuario</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for detalle in detalles %}
+      <tr>
+        <td>{{ detalle.id }}</td>
+        <td>#{{ detalle.pedido.id_pedido }}</td>
+        <td>{{ detalle.producto.nombre }}</td>
+        <td>{{ detalle.cantidad }}</td>
+        <td>${{ detalle.subtotal }}</td>
+        <td>{{ detalle.email_usuario|default:"-" }}</td>
+        <td>
+          <a href="{% url 'detalles_pedidos_update' detalle.id %}" class="btn btn-warning btn-sm">✏️</a>
+          <a href="{% url 'detalles_pedidos_delete' detalle.id %}" class="btn btn-danger btn-sm"
+             onclick="return confirm('¿Seguro que deseas eliminar este detalle?');">🗑️</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7">No hay detalles registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
