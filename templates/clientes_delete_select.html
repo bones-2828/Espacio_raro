@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Eliminar Cliente</h2>
+  {% if request.GET.id %}
+    <form method="POST">
+      {% csrf_token %}
+      <p>¿Seguro que quieres eliminar este cliente?</p>
+      <button type="submit" class="btn btn-danger">Eliminar</button>
+      <a href="{% url 'clientes_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  {% else %}
+    <ul class="list-group">
+      {% for c in clientes %}
+      <li class="list-group-item d-flex justify-content-between">
+        {{ c.nombre }} {{ c.apellido }}
+        <a href="?id={{ c.id }}" class="btn btn-sm btn-danger">Eliminar</a>
+      </li>
+      {% empty %}
+      <li class="list-group-item">No hay clientes para eliminar.</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endblock %}

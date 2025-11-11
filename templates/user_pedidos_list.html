@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Mis Pedidos</h2>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID Pedido</th>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Precio Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidos %}
+                <tr>
+                    <td>#{{ pedido.id_pedido }}</td>
+                    <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
+                    <td>{{ pedido.estado }}</td>
+                    <td>${{ pedido.precio_total }}</td>
+                    <td>
+                        <a href="{% url 'user_pedido_detail' pedido.id_pedido %}" class="btn btn-sm btn-primary">Ver</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No tienes pedidos registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mt-3 text-center">
+        <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Volver al panel</a>
+    </div>
+</div>
+{% endblock %}

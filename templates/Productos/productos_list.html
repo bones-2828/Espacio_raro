@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Lista de Productos</h2>
+  <a href="{% url 'productos_create' %}" class="btn btn-success mb-3">Nuevo Producto</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nombre</th><th>Tipo</th><th>Talla</th><th>Color</th>
+        <th>Precio</th><th>Stock</th><th>Distribuidor</th><th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for producto in productos %}
+      <tr>
+        <td>{{ producto.id_producto }}</td>
+        <td>{{ producto.nombre }}</td>
+        <td>{{ producto.tipo_producto }}</td>
+        <td>{{ producto.talla }}</td>
+        <td>{{ producto.color }}</td>
+        <td>${{ producto.precio_unitario }}</td>
+        <td>{{ producto.cantidad_stock }}</td>
+        <td>{{ producto.distribuidor }}</td>
+        <td>
+          <a href="{% url 'productos_update' producto.id_producto %}" class="btn btn-warning btn-sm">Editar</a>
+          <a href="{% url 'productos_delete' producto.id_producto %}" class="btn btn-danger btn-sm">Eliminar</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" class="text-center">No hay productos registrados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

@@ -1,0 +1,116 @@
+/* Fondo gris claro para resaltar el formulario */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f4f4f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+/* Contenedor general */
+.login-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Caja del formulario */
+.login-card {
+  background: #fff;
+  padding: 2rem;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* Título */
+.login-card h1 {
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+/* Filas del formulario */
+.form-row {
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.form-row label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #444;
+}
+
+.form-row input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+/* Botón de ingresar */
+.form-actions button {
+  background-color: #212529; /* parecido al navbar oscuro */
+  color: white;
+  border: none;
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.form-actions button:hover {
+  background-color: #343a40;
+}
+
+/* Enlace a registro */
+.register-btn {
+  display: inline-block;
+  margin-top: 1rem;
+  background-color: #0d6efd;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: background-color 0.3s ease;
+}
+
+.register-btn:hover {
+  background-color: #0b5ed7;
+}
+
+/* Mensajes */
+.messages {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 1rem;
+}
+
+.messages li {
+  padding: 0.6rem;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.msg.error {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.msg.success {
+  background: #d1e7dd;
+  color: #0f5132;
+}

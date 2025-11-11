@@ -1,0 +1,29 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Panel de Usuario</title>
+  <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <h1>Bienvenido, {{ request.user.username }}</h1>
+      <p>Este es tu panel de usuario.</p>
+
+      <ul>
+        <li><a href="{% url 'user_pedidos_list' %}">Ver mis pedidos</a></li>
+        <li><a href="{% url 'user_perfil_edit' %}">Editar mi perfil</a></li>
+        <li><a href="{% url 'user_confirm' %}">Realizar un pedido</a></li>
+        <li><a href="#">Contactar soporte</a></li>
+      </ul>
+
+      <div class="form-actions">
+        <a href="{% url 'homepage' %}">Cerrar sesión</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

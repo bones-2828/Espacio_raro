@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <div class="card shadow-lg p-4">
+        <h4 class="mb-3">¿Seguro que deseas eliminar este detalle de pedido?</h4>
+        <p><strong>ID:</strong> {{ detalle.id_detalle }}</p>
+        <p><strong>Pedido:</strong> {{ detalle.pedido }}</p>
+        <p><strong>Producto:</strong> {{ detalle.producto }}</p>
+        <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+        <p><strong>Subtotal:</strong> ${{ detalle.subtotal }}</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a href="{% url 'detalles_pedidos_list' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

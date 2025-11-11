@@ -1,0 +1,60 @@
+{% load static %}
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registro de Cliente</title>
+  <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
+</head>
+<body>
+  <div class="login-wrapper">
+    <div class="login-card">
+      <h1>Crear cuenta</h1>
+
+      {% if messages %}
+        <ul class="messages">
+          {% for message in messages %}
+            <li class="msg {{ message.tags }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      <!-- FORMULARIO HTML PURO -->
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <div class="form-row">
+          <label for="username">Usuario</label>
+          <input type="text" name="username" id="username" required placeholder="Usuario">
+        </div>
+
+        <div class="form-row">
+          <label for="email">Correo electrónico</label>
+          <input type="email" name="email" id="email" required placeholder="Correo electrónico">
+        </div>
+
+        <div class="form-row">
+          <label for="password1">Contraseña</label>
+          <input type="password" name="password1" id="password1" required placeholder="Contraseña">
+        </div>
+
+        <div class="form-row">
+          <label for="password2">Confirmar Contraseña</label>
+          <input type="password" name="password2" id="password2" required placeholder="Confirmar contraseña">
+        </div>
+
+        <div class="form-actions">
+          <button type="submit">Registrarse</button>
+        </div>
+      </form>
+      <!-- FIN FORMULARIO -->
+
+      <div class="form-actions">
+        <a href="{% url 'login_view' %}" class="register-btn">Iniciar sesión</a>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>

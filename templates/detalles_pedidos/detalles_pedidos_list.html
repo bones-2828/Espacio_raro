@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Gestión de Detalles de Pedido</h2>
+
+    <!-- Botones superiores -->
+    <div class="d-flex justify-content-between mb-3">
+        <a href="{% url 'detalles_pedidos_create' %}" class="btn btn-success btn-sm">
+            <i class="bi bi-plus-lg"></i> Agregar Detalle
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-sm">
+            <i class="bi bi-house-door"></i> Volver al Inicio
+        </a>
+    </div>
+
+    <!-- Tabla compacta -->
+    <div class="table-responsive shadow-sm p-2 bg-white rounded" style="max-width: 95%; margin: auto;">
+        <table class="table table-sm table-bordered table-hover align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Pedido</th>
+                    <th class="text-nowrap">Producto</th>
+                    <th class="text-nowrap">Cant.</th>
+                    <th class="text-nowrap">Precio</th>
+                    <th class="text-nowrap">Subtotal</th>
+                    <th class="text-nowrap">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.id_detalle }}</td>
+                    <td>#{{ detalle.pedido.id_pedido }}</td>
+                    <td>{{ detalle.producto.nombre }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td>${{ detalle.producto.precio_unitario }}</td>
+                    <td>${{ detalle.subtotal }}</td>
+                    <td class="text-nowrap">
+                        <a href="{% url 'detalles_pedidos_update' pk=detalle.id_detalle %}" 
+                           class="btn btn-outline-primary btn-sm px-2 py-1 me-1"
+                           title="Editar">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a href="{% url 'detalles_pedidos_delete' pk=detalle.id_detalle %}" 
+                           class="btn btn-outline-danger btn-sm px-2 py-1"
+                           title="Eliminar"
+                           onclick="return confirm('¿Estás seguro de eliminar este detalle de pedido?');">
+                            <i class="bi bi-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-3">
+                        No hay detalles de pedidos registrados.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Iconos de Bootstrap -->
+<link rel="stylesheet" 
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+{% endblock %}

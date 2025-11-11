@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="text-success">¡Pedido realizado con éxito!</h2>
+    <p>Gracias por tu compra. Hemos recibido tu pedido y te contactaremos pronto.</p>
+    <a href="{% url 'homepage' %}" class="btn btn-primary mt-3">Regresar al menu principal</a>
+    <a href="{% url 'quickorder' %}" class="btn btn-primary mt-3">Hacer otro pedido</a>
+</div>
+{% endblock %}
