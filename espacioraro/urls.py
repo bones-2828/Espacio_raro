@@ -1,6 +1,12 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from main import views
+from rest_framework import routers
+from main.api import ClientesViewSet
+
+# --- API Router ---
+router = routers.DefaultRouter()
+router.register(r'clientes', ClientesViewSet, basename='clientes')
 
 urlpatterns = [
     # Admin Django
@@ -22,12 +28,11 @@ urlpatterns = [
     path('user/pedidos/', views.user_pedidos_list, name='user_pedidos_list'),
     path('user/pedidos/<int:pk>/', views.user_pedido_detail, name='user_pedido_detail'),
 
-    #Perfil del usuario
+    # Perfil del usuario
     path('user/perfil/', views.user_perfil_edit, name='user_perfil_edit'),
     # Crear pedido desde cuenta de usuario
     path('user/quickorder/', views.user_quickorder, name='user_quickorder'),
     path('user/confirm/', views.user_confirm, name='user_confirm'),
-
 
     # CRUD Clientes
     path('clientes/', views.clientes_list, name='clientes_list'),
@@ -54,6 +59,8 @@ urlpatterns = [
     path('detalles_pedidos/nuevo/', views.detalles_pedidos_create, name='detalles_pedidos_create'),
     path('detalles_pedidos/<int:pk>/editar/', views.detalles_pedidos_update, name='detalles_pedidos_update'),
     path('detalles_pedidos/<int:pk>/eliminar/', views.detalles_pedidos_delete, name='detalles_pedidos_delete'),
-    
 
+    # --- API REST ---
+    path('api/', include(router.urls)),
 ]
+
