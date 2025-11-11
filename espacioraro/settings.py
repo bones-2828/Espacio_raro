@@ -77,8 +77,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'er_database',
-        'USER': 'root',
-        'PASSWORD': 'Pso01077',
+        'USER': 'luciano',
+        'PASSWORD': 'luciano1234',
         'HOST': 'localhost',
         'PORT': '3306',
     }
