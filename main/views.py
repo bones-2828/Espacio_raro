@@ -306,6 +306,46 @@ def detalles_pedidos_delete(request, pk):
     return render(request, 'detalles_pedidos/detalles_confirm_delete.html', {'detalle': detalle})
 
 
+
+#Crud superusuarios
+
+def superuser_required(view_func):
+    return user_passes_test(lambda u: u.is_superuser)(view_func)
+
+@superuser_required
+def superuser_list(request):
+    superusers = User.objects.filter(is_superuser=True)
+    return render(request, 'superusers/superuser_list.html', {'superusers': superusers})
+
+@superuser_required
+def superuser_create(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        if not username or not password:
+            messages.error(request, "Debe ingresar nombre de usuario y contraseña.")
+        else:
+            User.objects.create_superuser(username=username, email=email, password=password)
+            messages.success(request, f"Superusuario '{username}' creado correctamente.")
+            return redirect('superuser_list')
+
+    return render(request, 'superusers/superuser_create.html')
+
+@superuser_required
+def superuser_delete(request, pk):
+    superuser = get_object_or_404(User, pk=pk)
+
+    if request.user == superuser:
+        messages.error(request, "No puedes eliminar tu propio usuario.")
+    else:
+        superuser.delete()
+        messages.success(request, f"Superusuario '{superuser.username}' eliminado correctamente.")
+
+    return redirect('superuser_list')
+
+
 # ---------------------------
 # PEDIDOS ANÓNIMOS
 # ---------------------------

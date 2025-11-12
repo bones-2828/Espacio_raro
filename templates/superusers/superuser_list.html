@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>👑 Superusuarios</h1>
+
+<a href="{% url 'superuser_create' %}" class="btn">➕ Crear nuevo superusuario</a>
+
+<table border="1" cellpadding="10">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Email</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for su in superusers %}
+      <tr>
+        <td>{{ su.id }}</td>
+        <td>{{ su.username }}</td>
+        <td>{{ su.email }}</td>
+        <td>
+          {% if request.user != su %}
+            <form action="{% url 'superuser_delete' su.pk %}" method="post" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" onclick="return confirm('¿Seguro que deseas eliminar a {{ su.username }}?')">🗑 Eliminar</button>
+            </form>
+          {% else %}
+            <span>No puedes eliminarte</span>
+          {% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="4">No hay superusuarios registrados.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'dashboard' %}" class="btn">⬅ Volver al panel</a>
+{% endblock %}

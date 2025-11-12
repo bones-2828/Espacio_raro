@@ -4,6 +4,8 @@ from main import views
 from rest_framework import routers
 from main.api import ClientesViewSet, PedidosViewSet, DetallesPedidosViewSet, ProductoViewSet
 
+
+
 # --- API Router ---
 router = routers.DefaultRouter()
 router.register(r'clientes', ClientesViewSet, basename='clientes')
@@ -63,6 +65,14 @@ urlpatterns = [
     path('detalles_pedidos/nuevo/', views.detalles_pedidos_create, name='detalles_pedidos_create'),
     path('detalles_pedidos/<int:pk>/editar/', views.detalles_pedidos_update, name='detalles_pedidos_update'),
     path('detalles_pedidos/<int:pk>/eliminar/', views.detalles_pedidos_delete, name='detalles_pedidos_delete'),
+    
+    #CRUD superusuarios
+    
+    # --- CRUD Superusuarios ---
+    path('superusers/', views.superuser_list, name='superuser_list'),
+    path('superusers/nuevo/', views.superuser_create, name='superuser_create'),
+    path('superusers/<int:pk>/eliminar/', views.superuser_delete, name='superuser_delete'),
+
 
     # --- API REST ---
     path('api/', include(router.urls)),

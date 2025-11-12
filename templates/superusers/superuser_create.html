@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>➕ Crear Superusuario</h1>
+
+<form method="post">
+  {% csrf_token %}
+  <label>Nombre de usuario:</label>
+  <input type="text" name="username" required><br>
+
+  <label>Email:</label>
+  <input type="email" name="email"><br>
+
+  <label>Contraseña:</label>
+  <input type="password" name="password" required><br>
+
+  <button type="submit">✅ Crear</button>
+</form>
+
+<a href="{% url 'superuser_list' %}" class="btn">⬅ Volver</a>
+{% endblock %}

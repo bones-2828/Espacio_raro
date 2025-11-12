@@ -53,6 +53,16 @@
 
     </div>
 
+    <!-- Superusuarios -->
+      <div class="card">
+        <h2>Superusuarios</h2>
+        <ul>
+          <li><a href="{% url 'superuser_create' %}">Crear superusuario</a></li>
+          <li><a href="{% url 'superuser_list' %}">Listar superusuarios</a></li>
+        </ul>
+      </div>
+
+
     <!-- Botón de cierre de sesión -->
     <div class="logout text-center mt-4">
       <a href="{% url 'homepage' %}" class="btn-logout">Cerrar sesión</a>
