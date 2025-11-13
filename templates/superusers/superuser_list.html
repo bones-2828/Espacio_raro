@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>👑 Superusuarios</h1>
+<h1>Administradores</h1>
 
-<a href="{% url 'superuser_create' %}" class="btn">➕ Crear nuevo superusuario</a>
+<a href="{% url 'superuser_create' %}" class="btn">➕ Crear nuevo administrador</a>
 
 <table border="1" cellpadding="10">
   <thead>
@@ -31,7 +31,7 @@
         </td>
       </tr>
     {% empty %}
-      <tr><td colspan="4">No hay superusuarios registrados.</td></tr>
+      <tr><td colspan="4">No hay administradores registrados.</td></tr>
     {% endfor %}
   </tbody>
 </table>
