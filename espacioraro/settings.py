@@ -11,9 +11,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Security
 # =========================
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key")
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+# Railway y tu dominio
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # =========================
 # Apps
@@ -61,18 +62,16 @@ WSGI_APPLICATION = 'espacioraro.wsgi.application'
 # =========================
 # Database
 # =========================
-
-# Permite usar pymysql como MySQLdb
 pymysql.install_as_MySQLdb()
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DB_NAME", "er_database"),
-        'USER': os.getenv("DB_USER", "root"),
-        'PASSWORD': os.getenv("DB_PASSWORD", ""),
-        'HOST': os.getenv("DB_HOST", "localhost"),
-        'PORT': os.getenv("DB_PORT", "3306"),
+        'NAME': os.getenv("MYSQLDATABASE", "er_database"),
+        'USER': os.getenv("MYSQLUSER", "root"),
+        'PASSWORD': os.getenv("MYSQLPASSWORD", ""),
+        'HOST': os.getenv("MYSQLHOST", "localhost"),
+        'PORT': os.getenv("MYSQLPORT", "3306"),
     }
 }
 
@@ -107,7 +106,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # =========================
-# Email (ejemplo Gmail)
+# Email (Gmail ejemplo)
 # =========================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
