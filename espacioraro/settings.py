@@ -67,7 +67,7 @@ pymysql.install_as_MySQLdb()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("MYSQLDATABASE", "er_database"),
+        'NAME': os.getenv("MYSQLDATABASE"),
         'USER': os.getenv("MYSQLUSER"),
         'PASSWORD': os.getenv("MYSQLPASSWORD"),
         'HOST': os.getenv("MYSQLHOST"),
@@ -115,4 +115,5 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_USER", "tuemail@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
