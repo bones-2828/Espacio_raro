@@ -1,4 +1,5 @@
-django
-djangorestframework
+Django>=5.2.5
 mysqlclient
-Pillow
+pymysql
+djangorestframework
+python-dotenv
