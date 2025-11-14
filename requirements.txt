@@ -3,3 +3,4 @@ mysqlclient
 pymysql
 djangorestframework
 python-dotenv
+cryptography
