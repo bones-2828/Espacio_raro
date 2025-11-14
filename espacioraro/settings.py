@@ -68,9 +68,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.getenv("MYSQLDATABASE", "er_database"),
-        'USER': os.getenv("MYSQLUSER", "root"),
-        'PASSWORD': os.getenv("MYSQLPASSWORD", ""),
-        'HOST': os.getenv("MYSQLHOST", "localhost"),
+        'USER': os.getenv("MYSQLUSER"),
+        'PASSWORD': os.getenv("MYSQLPASSWORD"),
+        'HOST': os.getenv("MYSQLHOST"),
         'PORT': os.getenv("MYSQLPORT", "3306"),
     }
 }
@@ -115,3 +115,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("EMAIL_USER", "tuemail@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD", "")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
