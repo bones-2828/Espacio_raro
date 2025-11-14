@@ -13,8 +13,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-dev-key")
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# Allowed hosts desde Railway o tu dominio
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+# Railway y tu dominio
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # =========================
 # Apps
