@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -31,8 +32,19 @@ def order(request):
 
 def login_view(request):
     if request.method == "POST":
-        username = request.POST.get("username")
+        username_or_email = request.POST.get("username")
         password = request.POST.get("password")
+
+        # Buscar por username o por email
+        try:
+            user_obj = User.objects.get(
+                Q(username__iexact=username_or_email) | Q(email__iexact=username_or_email)
+            )
+            username = user_obj.username
+        except User.DoesNotExist:
+            username = username_or_email  # Si no existe, intentará con lo que puso el usuario
+
+        # Autenticación normal
         user = authenticate(request, username=username, password=password)
 
         if user:
@@ -42,13 +54,9 @@ def login_view(request):
             else:
                 return redirect("user_dashboard")
         else:
-            messages.error(request, "Usuario o contraseña incorrectos")
+            messages.error(request, "Usuario/Email o contraseña incorrectos.")
     
     return render(request, "login.html")
-
-
-def register_view(request):
-    return render(request, "register.html")
 
 
 def register(request):

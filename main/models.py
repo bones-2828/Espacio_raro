@@ -11,7 +11,14 @@ class Clientes(models.Model):
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=12, blank=True, null=True)
     direccion = models.CharField(max_length=100, blank=True, null=True)
-    rut = models.CharField(max_length=12, unique=True)
+    rut = models.CharField(
+    max_length=12,
+    unique=False,
+    null=True,
+    blank=True,
+    default=None
+)
+
 
     def __str__(self):
         return f"{self.nombre} {self.apellido or ''}".strip()
