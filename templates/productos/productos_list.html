@@ -1,35 +1,88 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2>Lista de Productos</h2>
-  <a href="{% url 'productos_create' %}" class="btn btn-success mb-3">Nuevo Producto</a>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th><th>Nombre</th><th>Tipo</th><th>Talla</th><th>Color</th>
-        <th>Precio</th><th>Stock</th><th>Distribuidor</th><th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for producto in productos %}
-      <tr>
-        <td>{{ producto.id_producto }}</td>
-        <td>{{ producto.nombre }}</td>
-        <td>{{ producto.tipo_producto }}</td>
-        <td>{{ producto.talla }}</td>
-        <td>{{ producto.color }}</td>
-        <td>${{ producto.precio_unitario }}</td>
-        <td>{{ producto.cantidad_stock }}</td>
-        <td>{{ producto.distribuidor }}</td>
-        <td>
-          <a href="{% url 'productos_update' producto.id_producto %}" class="btn btn-warning btn-sm">Editar</a>
-          <a href="{% url 'productos_delete' producto.id_producto %}" class="btn btn-danger btn-sm">Eliminar</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="9" class="text-center">No hay productos registrados.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+
+<div class="container py-4 mt-4">
+
+  <!-- Título centrado -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Gestión de Productos</h2>
+    <hr class="w-25 mx-auto opacity-50">
+  </div>
+
+  <!-- Botón Volver -->
+  <div class="mb-3">
+    <a href="{% url 'dashboard' %}" class="btn btn-dark shadow-sm px-3">
+      <i class="bi bi-arrow-left-circle"></i> Volver
+    </a>
+  </div>
+
+  <!-- Botón Crear Producto -->
+  <div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'productos_create' %}" class="btn btn-success shadow-sm px-3">
+      <i class="bi bi-plus-lg"></i> Nuevo Producto
+    </a>
+  </div>
+
+  <!-- Tabla de productos -->
+  <div class="table-responsive shadow rounded bg-white p-3">
+    <table class="table table-hover table-bordered text-center align-middle">
+
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Talla</th>
+          <th>Color</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Distribuidor</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for producto in productos %}
+        <tr>
+          <td>{{ producto.id_producto }}</td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.tipo_producto }}</td>
+          <td>{{ producto.talla }}</td>
+          <td>{{ producto.color }}</td>
+          <td>${{ producto.precio_unitario }}</td>
+          <td>{{ producto.cantidad_stock }}</td>
+          <td>{{ producto.distribuidor }}</td>
+          <td>
+            <!-- Editar -->
+            <a href="{% url 'productos_update' producto.id_producto %}"
+               class="btn btn-warning btn-sm me-1 shadow-sm">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+
+            <!-- Eliminar -->
+            <a href="{% url 'productos_delete' producto.id_producto %}"
+               class="btn btn-danger btn-sm shadow-sm"
+               onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="9" class="text-muted py-3">
+            No hay productos registrados.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
 </div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 {% endblock %}

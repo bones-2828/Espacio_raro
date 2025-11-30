@@ -6,16 +6,150 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Inicio de sesión</title>
   <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
+
+  <style>
+    /* Fondo global */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Caja principal */
+    .login-card {
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 35px 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      width: 350px;
+      color: white;
+      text-align: center;
+    }
+
+    .login-card h1 {
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    /* Mensajes */
+    .messages {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 15px 0;
+    }
+
+    .messages li {
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .error {
+      background: rgba(255, 0, 0, 0.35);
+    }
+
+    .success {
+      background: rgba(0, 255, 0, 0.35);
+    }
+
+    /* Inputs */
+    .form-row {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-row label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #f1f1f1;
+    }
+
+    .form-row input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 15px;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-row input::placeholder {
+      color: #e0e0e0;
+    }
+
+    /* Botón Ingresar */
+    button {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 140, 255, 0.35);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    button:hover {
+      background: rgba(0, 140, 255, 0.55);
+    }
+
+    /* Botón Registrarse */
+    .register-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: rgba(128, 128, 128, 0.35);
+      border-radius: 10px;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      margin-top: 20px;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .register-btn:hover {
+      background: rgba(128, 128, 128, 0.55);
+    }
+
+  </style>
+
 </head>
 <body>
+
   <div class="login-wrapper">
     <div class="login-card">
+
       <h1>Inicio de sesión</h1>
 
       {% if messages %}
         <ul class="messages">
           {% for message in messages %}
-            <li class="msg {{ message.tags }}">{{ message }}</li>
+            <li class="{{ message.tags }}">{{ message }}</li>
           {% endfor %}
         </ul>
       {% endif %}
@@ -24,7 +158,7 @@
         {% csrf_token %}
 
         <div class="form-row">
-          <label for="username">Usuario</label>
+          <label for="username">Usuario/Correo electronico</label>
           <input type="text" name="username" id="username" required placeholder="Usuario">
         </div>
 
@@ -35,15 +169,14 @@
 
         <input type="hidden" name="next" value="{{ next }}">
 
-        <div class="form-actions">
-          <button type="submit">Ingresar</button>
-        </div>
+        <button type="submit">Ingresar</button>
       </form>
 
-      <div class="form-actions">
-        <a href="{% url 'register' %}" class="register-btn">Registrarse</a>
-      </div>
+      <a href="{% url 'register' %}" class="register-btn">Registrarse</a>
+      <a href="{% url 'homepage' %}" class="register-btn">Volver</a>
+
     </div>
   </div>
+
 </body>
 </html>

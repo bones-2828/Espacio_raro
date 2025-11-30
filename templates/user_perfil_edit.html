@@ -1,45 +1,128 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Editar Perfil</h2>
 
-    <form method="POST">
-        {% csrf_token %}
-        
-        <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre</label>
-            <input type="text" class="form-control" name="nombre" id="nombre" value="{{ cliente.nombre }}" required>
-        </div>
+<style>
+    body {
+        background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed !important;
+    }
 
-        <div class="mb-3">
-            <label for="apellido" class="form-label">Apellido</label>
-            <input type="text" class="form-control" name="apellido" id="apellido" value="{{ cliente.apellido }}" required>
-        </div>
+    .glass-box {
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 35px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        color: white;
+        width: 90%;
+        max-width: 700px;
+        margin: auto;
+    }
 
-        <div class="mb-3">
-            <label for="rut" class="form-label">RUT</label>
-            <input type="text" class="form-control" name="rut" id="rut" value="{{ cliente.rut }}" required>
-        </div>
+    h2 {
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        margin-bottom: 25px;
+    }
 
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo Electrónico</label>
-            <input type="email" class="form-control" name="email" id="email" value="{{ cliente.email }}" required>
-        </div>
+    /* Inputs estilo glass */
+    .form-control {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.35) !important;
+        color: white !important;
+        backdrop-filter: blur(4px);
+    }
 
-        <div class="mb-3">
-            <label for="telefono" class="form-label">Teléfono</label>
-            <input type="text" class="form-control" name="telefono" id="telefono" value="{{ cliente.telefono }}">
-        </div>
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
 
-        <div class="mb-3">
-            <label for="direccion" class="form-label">Dirección</label>
-            <input type="text" class="form-control" name="direccion" id="direccion" value="{{ cliente.direccion }}">
-        </div>
+    label {
+        color: white;
+        font-weight: 600;
+    }
 
-        <div class="d-flex justify-content-between">
-            <button type="submit" class="btn btn-success">Guardar cambios</button>
-            <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Cancelar</a>
-        </div>
-    </form>
+    /* Botón verde glass */
+    .btn-success {
+        background: rgba(0, 255, 100, 0.45) !important;
+        border: none !important;
+        font-weight: bold;
+        backdrop-filter: blur(4px);
+        transition: 0.25s;
+    }
+
+    .btn-success:hover {
+        background: rgba(0, 255, 100, 0.65) !important;
+    }
+
+    /* Botón gris */
+    .btn-secondary {
+        background: rgba(128, 128, 128, 0.45) !important;
+        border: none !important;
+        backdrop-filter: blur(4px);
+        font-weight: bold;
+        transition: 0.25s;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(128, 128, 128, 0.65) !important;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="glass-box">
+
+        <h2>Editar Perfil</h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre</label>
+                <input type="text" class="form-control" name="nombre" id="nombre" 
+                       value="{{ cliente.nombre }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="apellido" class="form-label">Apellido</label>
+                <input type="text" class="form-control" name="apellido" id="apellido" 
+                       value="{{ cliente.apellido }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="rut" class="form-label">RUT</label>
+                <input type="text" class="form-control" name="rut" id="rut" 
+                       value="{{ cliente.rut }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" name="email" id="email" 
+                       value="{{ cliente.email }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono</label>
+                <input type="text" class="form-control" name="telefono" id="telefono" 
+                       value="{{ cliente.telefono }}">
+            </div>
+
+            <div class="mb-3">
+                <label for="direccion" class="form-label">Dirección</label>
+                <input type="text" class="form-control" name="direccion" id="direccion" 
+                       value="{{ cliente.direccion }}">
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success px-4">Guardar cambios</button>
+                <a href="{% url 'user_dashboard' %}" class="btn btn-secondary px-4">Cancelar</a>
+            </div>
+
+        </form>
+
+    </div>
 </div>
+
 {% endblock %}

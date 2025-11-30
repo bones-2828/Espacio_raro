@@ -6,24 +6,117 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Panel de Usuario</title>
   <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 35px 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      width: 360px;
+      color: white;
+      text-align: center;
+    }
+
+    .login-card h1 {
+      margin-bottom: 8px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .login-card p {
+      margin-bottom: 20px;
+      color: #e5e5e5;
+    }
+
+    /* Lista */
+    ul {
+      padding: 0;
+      margin: 0 0 20px 0;
+      list-style: none;
+    }
+
+    ul li {
+      margin-bottom: 12px;
+    }
+
+    /* Botones de menú semitransparentes */
+    .menu-btn {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 140, 255, 0.35);
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 10px;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .menu-btn:hover {
+      background: rgba(0, 140, 255, 0.55);
+    }
+
+    /* Cerrar sesión gris semitransparente */
+    .logout-btn {
+      display: block;
+      padding: 12px;
+      background: rgba(128, 128, 128, 0.35);
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      margin-top: 18px;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .logout-btn:hover {
+      background: rgba(128, 128, 128, 0.55);
+    }
+  </style>
+
 </head>
 <body>
+
   <div class="login-wrapper">
     <div class="login-card">
+
       <h1>Bienvenido, {{ request.user.username }}</h1>
       <p>Este es tu panel de usuario.</p>
 
       <ul>
-        <li><a href="{% url 'user_pedidos_list' %}">Ver mis pedidos</a></li>
-        <li><a href="{% url 'user_perfil_edit' %}">Editar mi perfil</a></li>
-        <li><a href="{% url 'user_confirm' %}">Realizar un pedido</a></li>
-        <li><a href="#">Contactar soporte</a></li>
+        <li><a href="{% url 'user_pedidos_list' %}" class="menu-btn">Ver mis pedidos</a></li>
+        <li><a href="{% url 'user_perfil_edit' %}" class="menu-btn">Editar mi perfil</a></li>
+        <li><a href="{% url 'user_confirm' %}" class="menu-btn">Realizar un pedido</a></li>
+        <li><a href="#" class="menu-btn">Contactar soporte</a></li>
       </ul>
 
-      <div class="form-actions">
-        <a href="{% url 'homepage' %}">Cerrar sesión</a>
-      </div>
+      <a href="{% url 'homepage' %}" class="logout-btn">Cerrar sesión</a>
+
     </div>
   </div>
+
 </body>
 </html>

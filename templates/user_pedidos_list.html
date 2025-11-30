@@ -1,41 +1,124 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block content %}
+
+<style>
+    body {
+        background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed !important;
+    }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        color: white;
+        width: 90%;
+        max-width: 900px;
+        margin: auto;
+    }
+
+    h2 {
+        color: white;
+        font-weight: bold;
+        margin-bottom: 25px;
+    }
+
+    /* Tabla semitransparente */
+    table {
+        background: rgba(255, 255, 255, 0.10);
+        color: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    thead.table-dark {
+        background: rgba(0, 0, 0, 0.6) !important;
+        color: white;
+    }
+
+    tbody tr {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    tbody tr:hover {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    /* Botón "Ver" */
+    .btn-primary {
+        background: rgba(0, 140, 255, 0.45) !important;
+        border: none !important;
+        backdrop-filter: blur(4px);
+        font-weight: bold;
+        transition: 0.25s;
+    }
+
+    .btn-primary:hover {
+        background: rgba(0, 140, 255, 0.65) !important;
+    }
+
+    /* Botón "Volver" gris */
+    .btn-secondary {
+        background: rgba(128, 128, 128, 0.45) !important;
+        border: none !important;
+        backdrop-filter: blur(4px);
+        font-weight: bold;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(128, 128, 128, 0.65) !important;
+    }
+
+    td {
+        font-size: 15px;
+    }
+</style>
+
+
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Mis Pedidos</h2>
+    <div class="glass-box">
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-hover text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>ID Pedido</th>
-                    <th>Fecha</th>
-                    <th>Estado</th>
-                    <th>Precio Total</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for pedido in pedidos %}
-                <tr>
-                    <td>#{{ pedido.id_pedido }}</td>
-                    <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
-                    <td>{{ pedido.estado }}</td>
-                    <td>${{ pedido.precio_total }}</td>
-                    <td>
-                        <a href="{% url 'user_pedido_detail' pedido.id_pedido %}" class="btn btn-sm btn-primary">Ver</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5">No tienes pedidos registrados.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+        <h2 class="text-center">Mis Pedidos</h2>
 
-    <div class="mt-3 text-center">
-        <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Volver al panel</a>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID Pedido</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th>Precio Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for pedido in pedidos %}
+                    <tr>
+                        <td>#{{ pedido.id_pedido }}</td>
+                        <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
+                        <td>{{ pedido.estado }}</td>
+                        <td>${{ pedido.precio_total }}</td>
+                    </tr>
+
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No tienes pedidos registrados.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+        </div>
+
+        <div class="mt-3 text-center">
+            <a href="{% url 'user_dashboard' %}" class="btn btn-secondary px-4">Volver al panel</a>
+        </div>
+
     </div>
 </div>
+
 {% endblock %}

@@ -4,9 +4,132 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Registro de Cliente</title>
+  <title>Registro de cuenta</title>
   <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
+
+  <style>
+    /* Fondo general */
+    body {
+      margin: 0;
+      padding: 0;
+      background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+
+    .login-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Caja contenedora */
+    .login-card {
+      background: rgba(255, 255, 255, 0.10);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 35px 40px;
+      border-radius: 14px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      width: 380px;
+      color: white;
+      text-align: center;
+    }
+
+    .login-card h1 {
+      margin-bottom: 10px;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .messages {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 15px 0;
+    }
+
+    .messages li {
+      background: rgba(255, 0, 0, 0.3);
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .form-row {
+      text-align: left;
+      margin-bottom: 15px;
+    }
+
+    .form-row label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #eaeaea;
+    }
+
+    .form-row input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 15px;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-row input::placeholder {
+      color: #e0e0e0;
+    }
+
+    /* Botón de registrar */
+    .form-actions button {
+      width: 100%;
+      padding: 14px;
+      background: rgba(0, 140, 255, 0.35);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .form-actions button:hover {
+      background: rgba(0, 140, 255, 0.55);
+    }
+
+    /* Botón "Iniciar sesión" */
+    .register-btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin-top: 20px;
+      background: rgba(128, 128, 128, 0.35);
+      color: white;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.25s;
+      backdrop-filter: blur(4px);
+    }
+
+    .register-btn:hover {
+      background: rgba(128, 128, 128, 0.55);
+    }
+  </style>
+
 </head>
+
 <body>
   <div class="login-wrapper">
     <div class="login-card">
@@ -20,8 +143,8 @@
         </ul>
       {% endif %}
 
-      <!-- FORMULARIO HTML PURO -->
-      <form method="post" novalidate>
+      <!-- FORMULARIO COMPLETO CON VALIDACIÓN -->
+      <form method="post" novalidate onsubmit="return validarFormulario()">
         {% csrf_token %}
 
         <div class="form-row">
@@ -36,13 +159,15 @@
 
         <div class="form-row">
           <label for="password1">Contraseña</label>
-          <input type="password" name="password1" id="password1" required placeholder="Contraseña">
+          <input minlength="6" type="password" name="password1" id="password1" required placeholder="Contraseña">
         </div>
 
         <div class="form-row">
           <label for="password2">Confirmar Contraseña</label>
-          <input type="password" name="password2" id="password2" required placeholder="Confirmar contraseña">
+          <input minlength="6" type="password" name="password2" id="password2" required placeholder="Confirmar contraseña">
         </div>
+
+        <div id="error-msg" style="color:#ff7b7b; font-weight:bold; margin-top:10px; display:none;"></div>
 
         <div class="form-actions">
           <button type="submit">Registrarse</button>
@@ -50,11 +175,48 @@
       </form>
       <!-- FIN FORMULARIO -->
 
-      <div class="form-actions">
-        <a href="{% url 'login_view' %}" class="register-btn">Iniciar sesión</a>
-      </div>
+      <a href="{% url 'login_view' %}" class="register-btn">Iniciar sesión</a>
 
     </div>
   </div>
+
+  <script>
+    function validarCorreo(email) {
+      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return regex.test(email);
+    }
+
+    function validarFormulario() {
+      const p1 = document.getElementById("password1").value;
+      const p2 = document.getElementById("password2").value;
+      const email = document.getElementById("email").value;
+      const error = document.getElementById("error-msg");
+
+      // Validación email
+      if (!validarCorreo(email)) {
+        error.style.display = "block";
+        error.textContent = "Debes ingresar un correo electrónico válido.";
+        return false;
+      }
+
+      // Validación longitud mínima
+      if (p1.length < 6 || p2.length < 6) {
+        error.style.display = "block";
+        error.textContent = "La contraseña debe tener al menos 6 caracteres.";
+        return false;
+      }
+
+      // Validación de coincidencia
+      if (p1 !== p2) {
+        error.style.display = "block";
+        error.textContent = "Las contraseñas no coinciden.";
+        return false;
+      }
+
+      error.style.display = "none";
+      return true;
+    }
+  </script>
+
 </body>
 </html>

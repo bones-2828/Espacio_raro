@@ -1,36 +1,105 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center mb-4">Mis Datos Personales</h2>
 
-    <div class="card shadow p-4">
+<style>
+    body {
+        background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed !important;
+    }
+
+    .glass-box {
+        background: rgba(255, 255, 255, 0.10);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 35px;
+        border-radius: 14px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        color: white;
+        width: 90%;
+        max-width: 700px;
+        margin: auto;
+    }
+
+    h2 {
+        font-weight: bold;
+        text-align: center;
+        color: white;
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-weight: bold;
+        color: white;
+    }
+
+    .form-control-plaintext {
+        background: rgba(255, 255, 255, 0.12);
+        padding: 10px 14px;
+        border-radius: 6px;
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    /* Botones Principales */
+    .btn-primary {
+        background: rgba(0, 140, 255, 0.45) !important;
+        border: none !important;
+        font-weight: bold;
+        backdrop-filter: blur(4px);
+        transition: 0.25s;
+    }
+
+    .btn-primary:hover {
+        background: rgba(0, 140, 255, 0.65) !important;
+    }
+
+    /* Botón gris */
+    .btn-secondary {
+        background: rgba(128, 128, 128, 0.45) !important;
+        border: none !important;
+        backdrop-filter: blur(4px);
+        font-weight: bold;
+        transition: 0.25s;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(128, 128, 128, 0.65) !important;
+    }
+
+</style>
+
+<div class="container mt-5">
+    <div class="glass-box">
+
+        <h2>Mis Datos Personales</h2>
+
         <div class="mb-3">
-            <label class="form-label"><strong>Nombre:</strong></label>
+            <label><strong>Nombre:</strong></label>
             <p class="form-control-plaintext">{{ cliente.nombre }}</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label"><strong>Apellido:</strong></label>
+            <label><strong>Apellido:</strong></label>
             <p class="form-control-plaintext">{{ cliente.apellido }}</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label"><strong>RUT:</strong></label>
+            <label><strong>RUT:</strong></label>
             <p class="form-control-plaintext">{{ cliente.rut }}</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label"><strong>Correo Electrónico:</strong></label>
+            <label><strong>Correo Electrónico:</strong></label>
             <p class="form-control-plaintext">{{ cliente.email }}</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label"><strong>Teléfono:</strong></label>
+            <label><strong>Teléfono:</strong></label>
             <p class="form-control-plaintext">{{ cliente.telefono }}</p>
         </div>
 
         <div class="mb-3">
-            <label class="form-label"><strong>Dirección:</strong></label>
+            <label><strong>Dirección:</strong></label>
             <p class="form-control-plaintext">{{ cliente.direccion }}</p>
         </div>
 
@@ -39,6 +108,8 @@
             <a href="{% url 'user_quickorder' %}" class="btn btn-primary me-2">Continuar con su pedido</a>
             <a href="{% url 'user_dashboard' %}" class="btn btn-secondary">Volver</a>
         </div>
+
     </div>
 </div>
+
 {% endblock %}

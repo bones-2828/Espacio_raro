@@ -9,10 +9,11 @@
 </head>
 <body>
   <div class="dashboard-wrapper">
+
     <h1>Panel de Administración</h1>
     <p>Bienvenido, {{ request.user.username }}</p>
 
-    <!-- Sección principal organizada en cuadrícula -->
+    <!-- GRID PRINCIPAL -->
     <div class="dashboard-grid">
 
       <!-- Usuarios -->
@@ -42,7 +43,7 @@
         </ul>
       </div>
 
-      <!-- Detalles de Pedidos -->
+      <!-- Detalles -->
       <div class="card">
         <h2>Detalles de pedidos</h2>
         <ul>
@@ -51,9 +52,7 @@
         </ul>
       </div>
 
-    </div>
-
-    <!-- Superusuarios -->
+      <!-- Superusuarios -->
       <div class="card">
         <h2>Superusuarios</h2>
         <ul>
@@ -62,11 +61,13 @@
         </ul>
       </div>
 
+    </div>
 
-    <!-- Botón de cierre de sesión -->
-    <div class="logout text-center mt-4">
+    <!-- LOGOUT -->
+    <div class="logout mt-4">
       <a href="{% url 'homepage' %}" class="btn-logout">Cerrar sesión</a>
     </div>
+
   </div>
 </body>
 </html>

@@ -1,42 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2>Detalles de Pedidos</h2>
-  <a href="{% url 'detalles_pedidos_create' %}" class="btn btn-success mb-3">➕ Añadir Detalle</a>
 
-  <table class="table table-striped text-center shadow">
-    <thead class="table-dark">
-      <tr>
-        <th>ID</th>
-        <th>Pedido</th>
-        <th>Producto</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
-        <th>Email Usuario</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for detalle in detalles %}
-      <tr>
-        <td>{{ detalle.id }}</td>
-        <td>#{{ detalle.pedido.id_pedido }}</td>
-        <td>{{ detalle.producto.nombre }}</td>
-        <td>{{ detalle.cantidad }}</td>
-        <td>${{ detalle.subtotal }}</td>
-        <td>{{ detalle.email_usuario|default:"-" }}</td>
-        <td>
-          <a href="{% url 'detalles_pedidos_update' detalle.id %}" class="btn btn-warning btn-sm">✏️</a>
-          <a href="{% url 'detalles_pedidos_delete' detalle.id %}" class="btn btn-danger btn-sm"
-             onclick="return confirm('¿Seguro que deseas eliminar este detalle?');">🗑️</a>
-        </td>
-      </tr>
-      {% empty %}
-      <tr>
-        <td colspan="7">No hay detalles registrados.</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="container py-4 mt-4">
+
+  <!-- Título Principal -->
+  <div class="text-center mb-4">
+    <h2 class="fw-bold">Detalles de Pedidos</h2>
+    <hr class="w-25 mx-auto opacity-50">
+  </div>
+
+  <!-- Botón Volver -->
+  <div class="mb-3">
+    <a href="{% url 'dashboard' %}" class="btn btn-dark shadow-sm px-3">
+      <i class="bi bi-arrow-left-circle"></i> Volver
+    </a>
+  </div>
+
+  <!-- Botón Crear -->
+  <div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'detalles_pedidos_create' %}" class="btn btn-success shadow-sm px-3">
+      <i class="bi bi-plus-circle"></i> Añadir Detalle
+    </a>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-responsive bg-white shadow-sm rounded p-3">
+    <table class="table table-bordered table-hover text-center align-middle">
+
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Pedido</th>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th>Email Usuario</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for detalle in detalles %}
+        <tr>
+          <td>{{ detalle.id }}</td>
+          <td>#{{ detalle.pedido.id_pedido }}</td>
+          <td>{{ detalle.producto.nombre }}</td>
+          <td>{{ detalle.cantidad }}</td>
+          <td>${{ detalle.subtotal }}</td>
+          <td>{{ detalle.email_usuario|default:"-" }}</td>
+
+          <td class="text-nowrap">
+            <!-- Editar -->
+            <a href="{% url 'detalles_pedidos_update' detalle.id %}" 
+               class="btn btn-warning btn-sm me-1 shadow-sm" title="Editar">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+
+            <!-- Eliminar -->
+            <a href="{% url 'detalles_pedidos_delete' detalle.id %}" 
+               class="btn btn-danger btn-sm shadow-sm"
+               onclick="return confirm('¿Seguro que deseas eliminar este detalle?');"
+               title="Eliminar">
+              <i class="bi bi-trash"></i>
+            </a>
+          </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center text-muted py-3">
+            No hay detalles registrados.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
 </div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
 {% endblock %}
