@@ -13,11 +13,11 @@ class Clientes(models.Model):
     direccion = models.CharField(max_length=100, blank=True, null=True)
     rut = models.CharField(
     max_length=12,
-    unique=False,
     null=True,
     blank=True,
     default=None
 )
+
 
 
     def __str__(self):
