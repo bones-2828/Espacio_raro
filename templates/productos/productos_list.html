@@ -36,7 +36,10 @@
           <th>Color</th>
           <th>Precio</th>
           <th>Stock</th>
+          <th>Stock Crítico</th>
           <th>Distribuidor</th>
+          <th>Contacto Distribuidor</th>
+          <th>Margen Ganancia</th> <!-- 🔥 NUEVO -->
           <th>Acciones</th>
         </tr>
       </thead>
@@ -51,7 +54,11 @@
           <td>{{ producto.color }}</td>
           <td>${{ producto.precio_unitario }}</td>
           <td>{{ producto.cantidad_stock }}</td>
+          <td>{{ producto.stock_critico }}</td>
           <td>{{ producto.distribuidor }}</td>
+          <td>{{ producto.contacto_distribuidor }}</td>
+          <td>{{ producto.margen_ganancia }}%</td> <!-- 🔥 NUEVO -->
+
           <td>
             <!-- Editar -->
             <a href="{% url 'productos_update' producto.id_producto %}"
@@ -69,7 +76,7 @@
         </tr>
         {% empty %}
         <tr>
-          <td colspan="9" class="text-muted py-3">
+          <td colspan="12" class="text-muted py-3">
             No hay productos registrados.
           </td>
         </tr>

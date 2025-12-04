@@ -29,60 +29,64 @@
     <table class="table table-hover table-bordered text-center align-middle">
 
       <thead class="table-dark">
-        <tr>
-          <th>ID</th>
-          <th>Cliente</th>
-          <th>Inicio</th>
-          <th>Entrega</th>
-          <th>Término</th>
-          <th>Estado</th>
-          <th>Precio Total</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Inicio</th>
+        <th>Entrega</th>
+        <th>Término</th>
+        <th>Estado</th>
+        <th>Precio Total</th>
+        <th>Acciones</th>
+    </tr>
+</thead>
 
-      <tbody>
-        {% for pedido in pedidos %}
-        <tr>
-          <td>{{ pedido.id_pedido }}</td>
-          <td>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</td>
-          <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
-          <td>{{ pedido.fecha_entrega|date:"d/m/Y" }}</td>
-          <td>{{ pedido.fecha_termino|date:"d/m/Y" }}</td>
-          <td class="fw-semibold">{{ pedido.estado|capfirst }}</td>
-          <td class="fw-semibold">${{ pedido.precio_total }}</td>
+<tbody>
+    {% for pedido in pedidos %}
+    <tr>
+        <td>{{ pedido.id_pedido }}</td>
+        <td>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</td>
+        <td>{{ pedido.cliente.email }}</td>
+        <td>{{ pedido.cliente.telefono|default:"—" }}</td>
 
-          <td>
-            <!-- Ver -->
+        <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
+        <td>{{ pedido.fecha_entrega|date:"d/m/Y" }}</td>
+        <td>{{ pedido.fecha_termino|date:"d/m/Y" }}</td>
+
+        <td class="fw-semibold">{{ pedido.estado|capfirst }}</td>
+        <td class="fw-semibold">${{ pedido.precio_total }}</td>
+
+        <td>
             <a href="{% url 'pedidos_detail' pedido.id_pedido %}"
                class="btn btn-info btn-sm me-1 shadow-sm" title="Ver">
               <i class="bi bi-eye"></i>
             </a>
 
-            <!-- Editar -->
             <a href="{% url 'pedidos_update' pedido.id_pedido %}"
                class="btn btn-warning btn-sm me-1 shadow-sm" title="Editar">
               <i class="bi bi-pencil-square"></i>
             </a>
 
-            <!-- Eliminar -->
             <a href="{% url 'pedidos_delete' pedido.id_pedido %}"
                class="btn btn-danger btn-sm shadow-sm"
-               title="Eliminar"
-               onclick="return confirm('¿Seguro que deseas eliminar este pedido?');">
+               onclick="return confirm('¿Seguro que deseas eliminar este pedido?');"
+               title="Eliminar">
               <i class="bi bi-trash"></i>
             </a>
-          </td>
-        </tr>
+        </td>
+    </tr>
 
-        {% empty %}
-        <tr>
-          <td colspan="8" class="text-muted py-3">
+    {% empty %}
+    <tr>
+        <td colspan="10" class="text-muted py-3">
             No hay pedidos registrados.
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
+        </td>
+    </tr>
+    {% endfor %}
+</tbody>
+
 
     </table>
   </div>

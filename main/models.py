@@ -32,11 +32,15 @@ class Producto(models.Model):
     color = models.CharField(max_length=20, blank=True, null=True)
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
     cantidad_stock = models.IntegerField(default=0)
+    stock_critico = models.IntegerField(default=0)
+    margen_ganancia = models.IntegerField(default=0)
+
     distribuidor = models.CharField(max_length=30, blank=True, null=True)
     contacto_distribuidor = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
+
 
 
 class Pedidos(models.Model):

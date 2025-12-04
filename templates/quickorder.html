@@ -79,14 +79,32 @@
 <body>
 
 <div class="glass-card">
-  <h3 class="text-center mb-4">📦 Pedido Rápido</h3>
+  <h3 class="text-center mb-4">Pedido Rápido</h3>
+  {% if messages %}
+<div class="mb-3">
+  {% for message in messages %}
+    <div 
+      class="alert 
+        {% if message.tags == 'error' %}alert-danger{% endif %}
+        {% if message.tags == 'success' %}alert-success{% endif %}
+        {% if message.tags == 'warning' %}alert-warning{% endif %}
+        bg-opacity-75"
+      role="alert"
+      style="backdrop-filter: blur(4px); border-radius: 10px;"
+    >
+      {{ message }}
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
     <!-- Datos del cliente -->
     <div class="mb-3">
-      <label>Nombre completo</label>
+      <label>Nombre y apellido</label>
       <input type="text" name="nombre_completo" class="form-control" required>
     </div>
 
@@ -108,7 +126,7 @@
     <!-- Producto -->
     <hr>
 
-    <h5 class="text-center mb-3">🛍️ Detalle del producto</h5>
+    <h5 class="text-center mb-3">Detalle del producto</h5>
 
     <div class="mb-3">
       <label>Producto</label>

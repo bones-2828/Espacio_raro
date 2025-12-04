@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contacto - Espacio Raro</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: url("{% static 'img/fondo.png' %}") center/cover fixed no-repeat;
+      background-size: cover;
+      background-attachment: fixed;
+      color: white;
+    }
+
+    .content-wrapper {
+      background: rgba(0, 0, 0, 0.55);
+      padding: 30px;
+      border-radius: 12px;
+      margin-top: 30px;
+    }
+
+    .banner {
+      height: 270px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.6rem;
+      font-weight: bold;
+      text-shadow: 2px 3px 6px rgba(0, 0, 0, 0.8);
+    }
+
+    .logo-top {
+      position: fixed;
+      top: 30px;
+      left: 30px;
+      width: 120px;
+      z-index: 9999;
+    }
+
+    .contact-box {
+      background: rgba(255, 255, 255, 0.09);
+      padding: 25px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <!-- LOGO SUPERIOR IZQUIERDO -->
+  <img src="{% static 'img/logo verde.png' %}" class="logo-top" alt="Logo Espacio Raro">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-opacity-75">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/">Inicio</a></li>
+          <li class="nav-item"><a class="nav-link" href="https://www.instagram.com/espacio_rar0/">Nuestro Instagram</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'login_view' %}">Inicio de sesión</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Contactos</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Banner -->
+  <section class="banner">
+    Contacto - Espacio Raro
+  </section>
+
+  <!-- Contenido -->
+  <div class="container content-wrapper">
+
+    <h2 class="text-center mb-4">Ponte en contacto con nosotros</h2>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="contact-box text-center">
+
+          <p class="fs-5">
+            <strong>Instagram:</strong><br>
+            <a href="https://www.instagram.com/espacio_rar0/" class="text-info" target="_blank">
+              @espacio_rar0
+            </a>
+          </p>
+
+          <p class="fs-5">
+            <strong>Correo electrónico:</strong><br>
+            <a href="mailto:espacioraropuq@gmail.com" class="text-info">
+              espacioraropuq@gmail.com
+            </a>
+          </p>
+
+          <p class="fs-5">
+            <strong>Celular / WhatsApp:</strong><br>
+            <a href="https://wa.me/56985493513" class="text-info" target="_blank">
+              +56 9 8549 3513
+            </a>
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-dark bg-opacity-75 text-white text-center py-4 mt-4">
+    &copy; 2025 Espacio Raro. Todos los derechos reservados.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
