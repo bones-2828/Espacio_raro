@@ -2,21 +2,21 @@ from django.db import models
 from django.core.mail import send_mail
 from django.conf import settings
 from decimal import Decimal
-
+from django.contrib.auth.models import User
 
 class Clientes(models.Model):
-    id_cliente = models.AutoField(primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente')
+    
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25, blank=True, null=True)
     email = models.EmailField(unique=True)
     telefono = models.CharField(max_length=12, blank=True, null=True)
     direccion = models.CharField(max_length=100, blank=True, null=True)
-    rut = models.CharField(
-    max_length=12,
-    null=True,
-    blank=True,
-    default=None
-)
+    rut = models.CharField(max_length=12, blank=True, null=True, default=None)
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.email})"
+
 
 
 
