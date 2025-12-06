@@ -5,7 +5,14 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 
 class Clientes(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='cliente')
+    # Permite clientes sin usuario asociado (invitados)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name='cliente',
+        null=True,
+        blank=True
+    )
     
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25, blank=True, null=True)
@@ -15,13 +22,7 @@ class Clientes(models.Model):
     rut = models.CharField(max_length=12, blank=True, null=True, default=None)
 
     def __str__(self):
-        return f"{self.nombre} {self.apellido} ({self.email})"
-
-
-
-
-    def __str__(self):
-        return f"{self.nombre} {self.apellido or ''}".strip()
+        return f"{self.nombre} {self.apellido or ''} ({self.email})"
 
 
 class Producto(models.Model):
@@ -34,13 +35,11 @@ class Producto(models.Model):
     cantidad_stock = models.IntegerField(default=0)
     stock_critico = models.IntegerField(default=0)
     margen_ganancia = models.IntegerField(default=0)
-
     distribuidor = models.CharField(max_length=30, blank=True, null=True)
     contacto_distribuidor = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         return self.nombre
-
 
 
 class Pedidos(models.Model):
@@ -49,7 +48,7 @@ class Pedidos(models.Model):
     fecha_inicio = models.DateTimeField(auto_now_add=True)
     fecha_entrega = models.DateField(blank=True, null=True)
     fecha_termino = models.DateField(blank=True, null=True)
-    estado = models.CharField(max_length=50, default="Pendiente")  # 👈 valor coherente con la vista
+    estado = models.CharField(max_length=50, default="Pendiente")
     precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
     mensaje = models.TextField(blank=True, null=True)
     imagen = models.ImageField(upload_to="imagenes_pedidos/", blank=True, null=True)
@@ -58,9 +57,8 @@ class Pedidos(models.Model):
         return f"Pedido #{self.id_pedido} - {self.cliente.nombre}"
 
     def enviar_email_confirmacion(self):
-        """Envía un correo con los detalles del pedido"""
         detalles = self.detalles.all()
-        productos = ", ".join([f"{d.producto.nombre} (x{d.cantidad})" for d in detalles]) or "Sin productos registrados"
+        productos = ", ".join([f"{d.producto.nombre} (x{d.cantidad})" for d in detalles]) or "Sin productos"
 
         subject = f"Nuevo pedido recibido #{self.id_pedido}"
         message = (
@@ -79,7 +77,7 @@ class Pedidos(models.Model):
             subject,
             message,
             settings.DEFAULT_FROM_EMAIL,
-            ["jtorresllr@gmail.com"],  # 👈 cámbialo por tu correo real
+            ["jtorresllr@gmail.com"],  # Cambia por tu correo real
             fail_silently=False,
         )
 
@@ -96,12 +94,10 @@ class Detalles_pedidos(models.Model):
         return f"Detalle #{self.id_detalle} - Pedido {self.pedido.id_pedido}"
 
     def save(self, *args, **kwargs):
-        """Actualiza subtotal automáticamente y recalcula total del pedido"""
-        if self.producto and not self.subtotal:
+        if self.producto:
             self.subtotal = Decimal(self.cantidad) * self.producto.precio_unitario
         super().save(*args, **kwargs)
 
-        # actualizar total del pedido
         total = sum(det.subtotal for det in self.pedido.detalles.all())
         self.pedido.precio_total = total
         self.pedido.save(update_fields=["precio_total"])
