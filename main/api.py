@@ -25,7 +25,7 @@ class ProductoSerializer(serializers.ModelSerializer):
 
 # --- VIEWSET ---
 class ClientesViewSet(viewsets.ModelViewSet):
-    queryset = Clientes.objects.all().order_by('id_cliente')
+    queryset = Clientes.objects.all().order_by('id')
     serializer_class = ClientesSerializer
 
 class PedidosViewSet(viewsets.ModelViewSet):
