@@ -5,15 +5,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import JsonResponse
-from django.core.mail import send_mail
-from django.core.mail import EmailMessage
-from io import BytesIO
+from django.core.mail import send_mail, EmailMessage
 from django.utils import timezone
 from decimal import Decimal
 from django.conf import settings
 from .models import Clientes, Producto, Pedidos, Detalles_pedidos
-from .forms import ClientesForm, PedidosForm, DetallePedidosForm, PedidoInvitadoForm
-
+from .forms import ClientesForm, PedidosForm, DetallePedidosForm
 
 # ---------------------------
 # VISTAS GENERALES
@@ -26,8 +23,8 @@ def contactos(request):
     return render(request, "contactos.html")
 
 def order(request):
-    return render(request, "quickorder.html")
-
+    productos = Producto.objects.all()
+    return render(request, "quickorder.html", {'productos': productos})
 
 # ---------------------------
 # LOGIN / LOGOUT
@@ -104,7 +101,6 @@ def user_dashboard(request):
         return redirect('dashboard')
     return render(request, 'user_dashboard.html', {'username': request.user.username})
 
-
 # ---------------------------
 # CRUD CLIENTES
 # ---------------------------
@@ -115,13 +111,11 @@ def clientes_list(request):
     clientes = Clientes.objects.all()
     return render(request, 'clientes/clientes_list.html', {'clientes': clientes})
 
-
 @login_required
 @user_passes_test(is_admin)
 def clientes_detail(request, pk):
     cliente = get_object_or_404(Clientes, pk=pk)
     return render(request, 'clientes/clientes_detail.html', {'cliente': cliente})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -132,7 +126,6 @@ def clientes_create(request):
         messages.success(request, "Cliente creado.")
         return redirect('clientes_list')
     return render(request, 'clientes/clientes_form.html', {'form': form})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -145,7 +138,6 @@ def clientes_update(request, pk):
         return redirect('clientes_list')
     return render(request, 'clientes/clientes_form.html', {'form': form})
 
-
 @login_required
 @user_passes_test(is_admin)
 def clientes_delete(request, pk):
@@ -156,7 +148,6 @@ def clientes_delete(request, pk):
         return redirect('clientes_list')
     return render(request, 'clientes/clientes_confirm_delete.html', {'object': cliente})
 
-
 # ---------------------------
 # CRUD PRODUCTOS
 # ---------------------------
@@ -166,7 +157,6 @@ def clientes_delete(request, pk):
 def productos_list(request):
     productos = Producto.objects.all()
     return render(request, 'productos/productos_list.html', {'productos': productos})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -179,10 +169,8 @@ def productos_create(request):
             color=request.POST.get('color', ''),
             precio_unitario=request.POST['precio_unitario'],
             cantidad_stock=request.POST['cantidad_stock'],
-
             stock_critico=request.POST.get('stock_critico', 0),
             margen_ganancia=request.POST.get('margen_ganancia', 0),
-
             distribuidor=request.POST.get('distribuidor', ''),
             contacto_distribuidor=request.POST.get('contacto_distribuidor', '')
         )
@@ -191,7 +179,6 @@ def productos_create(request):
         return redirect('productos_list')
 
     return render(request, 'productos/productos_form.html')
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -205,7 +192,6 @@ def productos_update(request, id_producto):
             'stock_critico', 'margen_ganancia',
             'distribuidor', 'contacto_distribuidor'
         ]
-
         for campo in campos:
             setattr(producto, campo, request.POST.get(campo, getattr(producto, campo)))
 
@@ -214,7 +200,6 @@ def productos_update(request, id_producto):
         return redirect('productos_list')
 
     return render(request, 'productos/productos_form.html', {'producto': producto})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -226,7 +211,6 @@ def productos_delete(request, id_producto):
         return redirect('productos_list')
     return render(request, 'productos/productos_confirm_delete.html', {'producto': producto})
 
-
 # ---------------------------
 # CRUD PEDIDOS
 # ---------------------------
@@ -236,7 +220,6 @@ def productos_delete(request, id_producto):
 def pedidos_list(request):
     pedidos = Pedidos.objects.select_related('cliente').all()
     return render(request, 'pedidos/pedidos_list.html', {'pedidos': pedidos})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -248,14 +231,12 @@ def pedidos_create(request):
         return redirect('pedidos_list')
     return render(request, 'pedidos/pedidos_form.html', {'form': form})
 
-
 @login_required
 @user_passes_test(is_admin)
 def pedidos_detail(request, pk):
     pedido = get_object_or_404(Pedidos, pk=pk)
     detalles = pedido.detalles.all()
     return render(request, 'pedidos/pedidos_detail.html', {'pedido': pedido, 'detalles': detalles})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -268,7 +249,6 @@ def pedidos_update(request, pk):
         return redirect('pedidos_list')
     return render(request, 'pedidos/pedidos_form.html', {'form': form})
 
-
 @login_required
 @user_passes_test(is_admin)
 def pedidos_delete(request, pk):
@@ -278,7 +258,6 @@ def pedidos_delete(request, pk):
         messages.success(request, "Pedido eliminado.")
         return redirect('pedidos_list')
     return render(request, 'pedidos/pedidos_confirm_delete.html', {'pedido': pedido})
-
 
 # ---------------------------
 # CRUD DETALLES PEDIDOS
@@ -290,7 +269,6 @@ def detalles_pedidos_list(request):
     detalles = Detalles_pedidos.objects.all()
     return render(request, 'detalles_pedidos/detalles_pedidos_list.html', {'detalles': detalles})
 
-
 @login_required
 @user_passes_test(is_admin)
 def detalles_pedidos_create(request):
@@ -300,7 +278,6 @@ def detalles_pedidos_create(request):
         messages.success(request, "Detalle creado.")
         return redirect('detalles_pedidos_list')
     return render(request, 'detalles_pedidos/detalles_form.html', {'form': form})
-
 
 @login_required
 @user_passes_test(is_admin)
@@ -313,7 +290,6 @@ def detalles_pedidos_update(request, pk):
         return redirect('detalles_pedidos_list')
     return render(request, 'detalles_pedidos/detalles_form.html', {'form': form})
 
-
 @login_required
 @user_passes_test(is_admin)
 def detalles_pedidos_delete(request, pk):
@@ -324,20 +300,17 @@ def detalles_pedidos_delete(request, pk):
         return redirect('detalles_pedidos_list')
     return render(request, 'detalles_pedidos/detalles_confirm_delete.html', {'detalle': detalle})
 
-
 # ---------------------------
-# CRUD SUPERUSUARIOS
+# SUPERUSUARIOS
 # ---------------------------
 
 def superuser_required(view_func):
     return user_passes_test(lambda u: u.is_superuser)(view_func)
 
-
 @superuser_required
 def superuser_list(request):
     superusers = User.objects.filter(is_superuser=True)
     return render(request, 'superusers/superuser_list.html', {'superusers': superusers})
-
 
 @superuser_required
 def superuser_create(request):
@@ -355,7 +328,6 @@ def superuser_create(request):
 
     return render(request, 'superusers/superuser_create.html')
 
-
 @superuser_required
 def superuser_delete(request, pk):
     superuser = get_object_or_404(User, pk=pk)
@@ -365,7 +337,6 @@ def superuser_delete(request, pk):
         superuser.delete()
         messages.success(request, f"Superusuario '{superuser.username}' eliminado.")
     return redirect('superuser_list')
-
 
 # ---------------------------
 # PEDIDOS ANÓNIMOS
@@ -381,8 +352,15 @@ def guardar_detalle_pedido(request):
         product = request.POST.get('productType')
 
         cliente_invitado, _ = Clientes.objects.get_or_create(
-            email='invitado@demo.cl',
-            defaults={'nombre': 'Invitado', 'apellido': 'Público', 'telefono': 'N/A'}
+            email=email,
+            defaults={
+                'nombre': fullName,
+                'apellido': '',
+                'telefono': 'N/A',
+                'direccion': address,
+                'rut': rut,
+                'user': None
+            }
         )
 
         try:
@@ -392,8 +370,7 @@ def guardar_detalle_pedido(request):
 
         pedido = Pedidos.objects.create(
             cliente=cliente_invitado,
-            fecha_inicio=timezone.now().date(),
-            estado='pendiente',
+            estado='Pendiente',
             precio_total=Decimal(producto.precio_unitario)
         )
 
@@ -408,17 +385,9 @@ def guardar_detalle_pedido(request):
         try:
             send_mail(
                 subject=f'Nuevo pedido recibido - {producto.nombre}',
-                message=(
-                    f"Pedido recibido:\n\n"
-                    f"Cliente: {fullName}\n"
-                    f"Correo: {email}\n"
-                    f"Dirección: {address}\n"
-                    f"RUT: {rut}\n"
-                    f"Producto: {producto.nombre}\n"
-                    f"Mensaje: {message}\n"
-                ),
+                message=f"Cliente: {fullName}\nCorreo: {email}\nDirección: {address}\nRUT: {rut}\nProducto: {producto.nombre}\nMensaje: {message}",
                 from_email='tuservidor@tudominio.cl',
-                to=['destino@tudominio.cl'],
+                recipient_list=['destino@tudominio.cl'],
                 fail_silently=False,
             )
         except:
@@ -427,265 +396,3 @@ def guardar_detalle_pedido(request):
         return JsonResponse({'success': True})
 
     return render(request, 'formulario_pedido.html')
-
-
-def order(request):
-    productos = Producto.objects.all()
-
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre_completo')
-        email_cliente = request.POST.get('email')
-        rut = request.POST.get('rut')
-        direccion = request.POST.get('direccion')
-        producto_id = request.POST.get('producto')
-        cantidad = request.POST.get('cantidad')
-        mensaje = request.POST.get('mensaje')
-        imagen = request.FILES.get('imagen')
-
-        # Validación de producto
-        try:
-            producto = Producto.objects.get(id_producto=producto_id)
-        except Producto.DoesNotExist:
-            messages.error(request, "El producto seleccionado no existe.")
-            return redirect('quickorder')
-
-        # Validación de cantidad
-        try:
-            cantidad = int(cantidad)
-            if cantidad < 1:
-                raise ValueError
-        except:
-            messages.error(request, "La cantidad ingresada no es válida.")
-            return redirect('quickorder')
-
-        # Validación de stock
-        if cantidad > producto.cantidad_stock:
-            messages.error(
-                request,
-                f"No puedes pedir {cantidad} unidades. Solo hay {producto.cantidad_stock} en stock."
-            )
-            return redirect('quickorder')
-
-        # Calcular el total
-        total = Decimal(producto.precio_unitario) * cantidad
-
-        # Cliente invitado
-        cliente_invitado, _ = Clientes.objects.get_or_create(
-            email=email_cliente,
-            defaults={
-                'nombre': nombre,
-                'apellido': '',
-                'rut': rut,
-                'telefono': 'N/A',
-                'direccion': direccion
-            }
-        )
-
-        # Crear el pedido
-        pedido = Pedidos.objects.create(
-            cliente=cliente_invitado,
-            fecha_inicio=timezone.now(),
-            estado="Pendiente",
-            precio_total=total
-        )
-
-        # Crear detalle
-        Detalles_pedidos.objects.create(
-            pedido=pedido,
-            producto=producto,
-            cantidad=cantidad,
-            subtotal=total,
-            email_usuario=email_cliente
-        )
-
-        # Descontar stock
-        producto.cantidad_stock -= cantidad
-        producto.save()
-
-        # Email
-        contenido = f"""
-        NUEVO PEDIDO
-
-        Cliente: {nombre}
-        Correo: {email_cliente}
-        RUT: {rut}
-        Dirección: {direccion}
-
-        Producto: {producto.nombre}
-        Precio unitario: ${producto.precio_unitario}
-        Cantidad: {cantidad}
-        Total: ${total}
-
-        Mensaje:
-        {mensaje or 'Sin mensaje'}
-        """
-
-        email = EmailMessage(
-            subject='Nuevo Pedido — Espacio Raro',
-            body=contenido,
-            from_email='tuservidor@gmail.com',
-            to=['jtorresllr@gmail.com'],
-        )
-
-        if imagen:
-            email.attach(imagen.name, imagen.read(), imagen.content_type)
-
-        try:
-            email.send()
-            messages.success(request, 'Pedido enviado correctamente.')
-        except:
-            messages.warning(request, 'El pedido se guardó, pero ocurrió un error al enviar el correo.')
-
-        return redirect('pedido_exitoso')
-
-    return render(request, 'quickorder.html', {'productos': productos})
-
-
-def pedido_exitoso(request):
-    return render(request, "quickorder_success.html")
-
-
-# ---------------------------
-# PERFIL DE USUARIO
-# ---------------------------
-
-@login_required
-def user_pedidos_list(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-        pedidos = Pedidos.objects.filter(cliente=cliente).order_by('-fecha_inicio')
-    except Clientes.DoesNotExist:
-        pedidos = []
-    return render(request, 'user_pedidos_list.html', {'pedidos': pedidos})
-
-
-@login_required
-def user_pedido_detail(request, pk):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-        pedido = Pedidos.objects.get(pk=pk, cliente=cliente)
-        detalles = pedido.detalles.all()
-    except:
-        return redirect('user_pedidos_list')
-    
-    return render(request, 'user_pedido_detail.html', {'pedido': pedido, 'detalles': detalles})
-
-
-@login_required
-def user_perfil_edit(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        cliente = Clientes.objects.create(
-            nombre=request.user.username,
-            email=request.user.email
-        )
-    
-    if request.method == "POST":
-        cliente.nombre = request.POST.get('nombre', cliente.nombre)
-        cliente.apellido = request.POST.get('apellido', cliente.apellido)
-        cliente.rut = request.POST.get('rut', cliente.rut)
-        cliente.telefono = request.POST.get('telefono', cliente.telefono)
-        cliente.direccion = request.POST.get('direccion', cliente.direccion)
-        cliente.save()
-        messages.success(request, "Perfil actualizado.")
-        return redirect('user_dashboard')
-    
-    return render(request, 'user_perfil_edit.html', {'cliente': cliente})
-
-
-@login_required
-def user_quickorder(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        messages.error(request, "Tu perfil no existe.")
-        return redirect('user_dashboard')
-
-    productos = Producto.objects.all()
-
-    if request.method == "POST":
-        producto_id = request.POST.get("producto")
-        cantidad = int(request.POST.get("cantidad", 1))
-        mensaje = request.POST.get("mensaje")
-        imagen = request.FILES.get("imagen")
-
-        producto = Producto.objects.get(id_producto=producto_id)
-
-        if cantidad > producto.cantidad_stock:
-            messages.error(
-                request,
-                f"No puedes pedir {cantidad} unidades. Solo hay {producto.cantidad_stock} en stock."
-            )
-            return redirect("user_quickorder")
-
-        total = Decimal(producto.precio_unitario) * cantidad
-
-        pedido = Pedidos.objects.create(
-            cliente=cliente,
-            fecha_inicio=timezone.now(),
-            estado="Pendiente",
-            precio_total=total
-        )
-
-        Detalles_pedidos.objects.create(
-            pedido=pedido,
-            producto=producto,
-            cantidad=cantidad,
-            subtotal=total,
-            email_usuario=cliente.email
-        )
-
-        producto.cantidad_stock -= cantidad
-        producto.save()
-
-        body = f"""
-        NUEVO PEDIDO RÁPIDO
-
-        Cliente: {cliente.nombre}
-        Correo: {cliente.email}
-        RUT: {cliente.rut}
-        Dirección: {cliente.direccion}
-
-        Producto: {producto.nombre}
-        Cantidad: {cantidad}
-        Total: ${total}
-
-        Mensaje:
-        {mensaje or 'Sin mensaje'}
-
-        Fecha: {pedido.fecha_inicio}
-        """
-
-        email = EmailMessage(
-            subject=f"Nuevo pedido rápido de {cliente.nombre}",
-            body=body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=["jtorresllr@gmail.com"],
-        )
-
-        if imagen:
-            email.attach(imagen.name, imagen.read(), imagen.content_type)
-
-        try:
-            email.send()
-            messages.success(request, "Tu pedido fue enviado.")
-        except:
-            messages.warning(request, "El pedido se guardó, pero el correo falló.")
-
-        return redirect("pedido_exitoso")
-
-    return render(request, "user_quickorder.html", {
-        "cliente": cliente,
-        "productos": productos
-    })
-
-
-@login_required
-def user_confirm(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        return redirect("user_dashboard")
-
-    return render(request, "user_confirm.html", {"cliente": cliente})
