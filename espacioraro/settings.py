@@ -1,20 +1,22 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
-# Cargar variables del archivo .env
-load_dotenv()
 import logging
 import sys
 
+# =====================
+# Cargar variables .env
+# =====================
+
+load_dotenv()
+
 logging.basicConfig(
-	level=logging.DEBUG,
-	format="%(levelname)s %(asctime)s %(module)s %(message)s",
-	stream=sys.stdout,
+    level=logging.DEBUG,
+    format="%(levelname)s %(asctime)s %(module)s %(message)s",
+    stream=sys.stdout,
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # =====================
 # Seguridad
@@ -22,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
 
 ALLOWED_HOSTS = [
     "localhost",
@@ -31,8 +34,14 @@ ALLOWED_HOSTS = [
     "www.espacioraro.cl",
 ]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://espacioraro.cl",
+    "https://www.espacioraro.cl",
+]
+
 # =====================
-# Apps
+# Aplicaciones
 # =====================
 
 INSTALLED_APPS = [
@@ -42,9 +51,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'main',
     'rest_framework',
-    'main.apps.MainConfig',
-
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -55,9 +65,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+
 ROOT_URLCONF = 'espacioraro.urls'
+
 
 TEMPLATES = [
     {
@@ -83,10 +99,10 @@ WSGI_APPLICATION = 'espacioraro.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.getenv("DB_NAME", "dbmaster"),
-        'USER': os.getenv("DB_USER", "dbmasteruser"),
-        'PASSWORD': os.getenv("DB_PASSWORD", "DJ1|Hy7awZ9r!HH^)`R0hG)(9ypchz9U"),
-        'HOST': os.getenv("DB_HOST", "ls-e15dde39c42a8905578a308bf461921aa081104a.cynkuc40ooag.us-east-1.rds.amazonaws.com"),
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
         'PORT': os.getenv("DB_PORT", "3306"),
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -95,19 +111,20 @@ DATABASES = {
 }
 
 # =====================
-# Validación de contraseñas
+# Validación contraseñas
 # =====================
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
+
 # =====================
-# Internacionalización
-# =====================
+
+# Internacionalización# =====================
 
 LANGUAGE_CODE = 'es-cl'
 TIME_ZONE = 'America/Santiago'
@@ -115,15 +132,26 @@ USE_I18N = True
 USE_TZ = True
 
 # =====================
-# Archivos estáticos
+# Archivos Estáticos
+# (Correctos para producción con Nginx)
 # =====================
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / "staticfiles"   # carpeta donde collectstatic guarda archivos
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # si NO usas carpeta "static", elimina esta línea
+]
 
 # =====================
-# Email
+# Archivos Media (imagenes)
+# =====================
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# =====================
+# Email SMTP (Gmail)
 # =====================
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -135,4 +163,16 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+
+}
+
+
+# =====================
+# Por defecto
+# =====================
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'        

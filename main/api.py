@@ -1,4 +1,5 @@
 from rest_framework import serializers, viewsets
+from rest_framework.permissions import IsAuthenticated
 from .models import Clientes, Pedidos, Detalles_pedidos, Producto
 
 # --- SERIALIZER ---        
@@ -25,17 +26,21 @@ class ProductoSerializer(serializers.ModelSerializer):
 
 # --- VIEWSET ---
 class ClientesViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Clientes.objects.all().order_by('id')
     serializer_class = ClientesSerializer
 
 class PedidosViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Pedidos.objects.all().order_by('id_pedido')
     serializer_class = PedidosSerializer
     
 class DetallesPedidosViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Detalles_pedidos.objects.all().order_by('id_detalle')
     serializer_class = DetallesPedidosSerializer
 
 class ProductoViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
     queryset = Producto.objects.all().order_by('id_producto')
     serializer_class = ProductoSerializer

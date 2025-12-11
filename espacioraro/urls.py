@@ -3,7 +3,7 @@ from django.urls import path, include
 from main import views
 from rest_framework import routers
 from main.api import ClientesViewSet, PedidosViewSet, DetallesPedidosViewSet, ProductoViewSet
-
+from main.api_auth_admin import AdminLoginAPIView
 
 
 # --- API Router ---
@@ -73,10 +73,13 @@ urlpatterns = [
     path('superusers/', views.superuser_list, name='superuser_list'),
     path('superusers/nuevo/', views.superuser_create, name='superuser_create'),
     path('superusers/<int:pk>/eliminar/', views.superuser_delete, name='superuser_delete'),
+    
 
-
-    # --- API REST ---
     path('api/', include(router.urls)),
+
+    path('api/admin-login/', AdminLoginAPIView.as_view(), name='admin_login'),
+
+    
     
 ]
 

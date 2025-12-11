@@ -85,7 +85,7 @@ class Pedidos(models.Model):
 class Detalles_pedidos(models.Model):
     id_detalle = models.AutoField(primary_key=True)
     pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE, related_name="detalles")
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="detalles")
     cantidad = models.PositiveIntegerField(default=1)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     email_usuario = models.EmailField(null=True, blank=True)
