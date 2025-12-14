@@ -11,6 +11,7 @@ from io import BytesIO
 from django.utils import timezone
 from decimal import Decimal
 from django.conf import settings
+from rest_framework.authtoken.models import Token
 from .models import Clientes, Producto, Pedidos, Detalles_pedidos
 from .forms import ClientesForm, PedidosForm, DetallePedidosForm, PedidoInvitadoForm
 
@@ -84,18 +85,30 @@ def register(request):
 
 
 def is_admin(user):
-    return user.is_superuser or user.is_staff
+    return user.is_authenticated and user.is_superuser
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def dashboard(request):
+
+    #print para verificar problema
+    print("AUTH:", request.META.get("HTTP_AUTHORIZATION"))
+
+
+    # Protección extra (defensa en profundidad)
+
+    if not request.user.is_authenticated or not is_admin(request.user):
+        return redirect('login_view')
+
     return render(request, "dashboard.html")
+
 
 
 def logout_view(request):
     logout(request)
-    return redirect('login_view')
+    request.session.flush()
+    return redirect('homepage')
 
 
 @login_required
@@ -109,22 +122,22 @@ def user_dashboard(request):
 # CRUD CLIENTES
 # ---------------------------
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def clientes_list(request):
     clientes = Clientes.objects.all()
     return render(request, 'clientes/clientes_list.html', {'clientes': clientes})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def clientes_detail(request, pk):
     cliente = get_object_or_404(Clientes, pk=pk)
     return render(request, 'clientes/clientes_detail.html', {'cliente': cliente})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def clientes_create(request):
     form = ClientesForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
@@ -134,8 +147,8 @@ def clientes_create(request):
     return render(request, 'clientes/clientes_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def clientes_update(request, pk):
     cliente = get_object_or_404(Clientes, pk=pk)
     form = ClientesForm(request.POST or None, instance=cliente)
@@ -146,8 +159,8 @@ def clientes_update(request, pk):
     return render(request, 'clientes/clientes_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def clientes_delete(request, pk):
     cliente = get_object_or_404(Clientes, pk=pk)
     if request.method == 'POST':
@@ -161,15 +174,15 @@ def clientes_delete(request, pk):
 # CRUD PRODUCTOS
 # ---------------------------
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def productos_list(request):
     productos = Producto.objects.all()
     return render(request, 'productos/productos_list.html', {'productos': productos})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def productos_create(request):
     if request.method == 'POST':
         producto = Producto(
@@ -193,8 +206,8 @@ def productos_create(request):
     return render(request, 'productos/productos_form.html')
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def productos_update(request, id_producto):
     producto = get_object_or_404(Producto, id_producto=id_producto)
 
@@ -216,8 +229,8 @@ def productos_update(request, id_producto):
     return render(request, 'productos/productos_form.html', {'producto': producto})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def productos_delete(request, id_producto):
     producto = get_object_or_404(Producto, id_producto=id_producto)
     if request.method == 'POST':
@@ -231,15 +244,15 @@ def productos_delete(request, id_producto):
 # CRUD PEDIDOS
 # ---------------------------
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def pedidos_list(request):
     pedidos = Pedidos.objects.select_related('cliente').all()
     return render(request, 'pedidos/pedidos_list.html', {'pedidos': pedidos})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def pedidos_create(request):
     form = PedidosForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -249,16 +262,16 @@ def pedidos_create(request):
     return render(request, 'pedidos/pedidos_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def pedidos_detail(request, pk):
     pedido = get_object_or_404(Pedidos, pk=pk)
     detalles = pedido.detalles.all()
     return render(request, 'pedidos/pedidos_detail.html', {'pedido': pedido, 'detalles': detalles})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def pedidos_update(request, pk):
     pedido = get_object_or_404(Pedidos, pk=pk)
     form = PedidosForm(request.POST or None, instance=pedido)
@@ -269,8 +282,8 @@ def pedidos_update(request, pk):
     return render(request, 'pedidos/pedidos_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def pedidos_delete(request, pk):
     pedido = get_object_or_404(Pedidos, pk=pk)
     if request.method == 'POST':
@@ -284,15 +297,15 @@ def pedidos_delete(request, pk):
 # CRUD DETALLES PEDIDOS
 # ---------------------------
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def detalles_pedidos_list(request):
     detalles = Detalles_pedidos.objects.all()
     return render(request, 'detalles_pedidos/detalles_pedidos_list.html', {'detalles': detalles})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def detalles_pedidos_create(request):
     form = DetallePedidosForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
@@ -302,8 +315,8 @@ def detalles_pedidos_create(request):
     return render(request, 'detalles_pedidos/detalles_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def detalles_pedidos_update(request, pk):
     detalle = get_object_or_404(Detalles_pedidos, pk=pk)
     form = DetallePedidosForm(request.POST or None, instance=detalle)
@@ -314,8 +327,8 @@ def detalles_pedidos_update(request, pk):
     return render(request, 'detalles_pedidos/detalles_form.html', {'form': form})
 
 
-@login_required
-@user_passes_test(is_admin)
+@login_required(login_url='login_view')
+@user_passes_test(is_admin, login_url='login_view')
 def detalles_pedidos_delete(request, pk):
     detalle = get_object_or_404(Detalles_pedidos, pk=pk)
     if request.method == 'POST':
@@ -549,7 +562,7 @@ def pedido_exitoso(request):
 # PERFIL DE USUARIO
 # ---------------------------
 
-@login_required
+@login_required(login_url='login_view')
 def user_pedidos_list(request):
     try:
         cliente = Clientes.objects.get(email=request.user.email)
@@ -559,7 +572,7 @@ def user_pedidos_list(request):
     return render(request, 'user_pedidos_list.html', {'pedidos': pedidos})
 
 
-@login_required
+@login_required(login_url='login_view')
 def user_pedido_detail(request, pk):
     try:
         cliente = Clientes.objects.get(email=request.user.email)
@@ -571,7 +584,7 @@ def user_pedido_detail(request, pk):
     return render(request, 'user_pedido_detail.html', {'pedido': pedido, 'detalles': detalles})
 
 
-@login_required
+@login_required(login_url='login_view')
 def user_perfil_edit(request):
     try:
         cliente = Clientes.objects.get(email=request.user.email)
@@ -594,7 +607,7 @@ def user_perfil_edit(request):
     return render(request, 'user_perfil_edit.html', {'cliente': cliente})
 
 
-@login_required
+@login_required(login_url='login_view')
 def user_quickorder(request):
     try:
         cliente = Clientes.objects.get(email=request.user.email)
@@ -681,7 +694,7 @@ def user_quickorder(request):
     })
 
 
-@login_required
+@login_required(login_url='login_view')
 def user_confirm(request):
     try:
         cliente = Clientes.objects.get(email=request.user.email)

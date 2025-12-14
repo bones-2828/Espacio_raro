@@ -16,12 +16,11 @@
     <!-- GRID PRINCIPAL -->
     <div class="dashboard-grid">
 
-      <!-- Usuarios -->
+      <!-- Clientes -->
       <div class="card">
-        <h2>Usuarios</h2>
-        <ul>
-          <li><a href="{% url 'clientes_create' %}">Crear usuario</a></li>
-          <li><a href="{% url 'clientes_list' %}">Listar usuarios</a></li>
+        <h2>Clientes</h2>
+        <ul>          
+          <li><a href="{% url 'clientes_list' %}">Listar clientes</a></li>
         </ul>
       </div>
 
@@ -37,27 +36,18 @@
       <!-- Pedidos -->
       <div class="card">
         <h2>Pedidos</h2>
-        <ul>
-          <li><a href="{% url 'pedidos_create' %}">Crear pedido</a></li>
+        <ul>          
           <li><a href="{% url 'pedidos_list' %}">Listar pedidos</a></li>
         </ul>
       </div>
 
-      <!-- Detalles -->
-      <div class="card">
-        <h2>Detalles de pedidos</h2>
-        <ul>
-          <li><a href="{% url 'detalles_pedidos_create' %}">Crear detalle</a></li>
-          <li><a href="{% url 'detalles_pedidos_list' %}">Listar detalles</a></li>
-        </ul>
-      </div>
 
-      <!-- Superusuarios -->
+      <!-- Administradores -->
       <div class="card">
-        <h2>Superusuarios</h2>
+        <h2>Administradores</h2>
         <ul>
-          <li><a href="{% url 'superuser_create' %}">Crear administrador</a></li>
-          <li><a href="{% url 'superuser_list' %}">Listar administradores</a></li>
+          <li><a href="{% url 'superuser_create' %}">Crear perfil de administrador</a></li>
+          <li><a href="{% url 'superuser_list' %}">Listar administradores del sistema</a></li>
         </ul>
       </div>
 

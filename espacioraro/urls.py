@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from main import views
 from rest_framework import routers
-from main.api import ClientesViewSet, PedidosViewSet, DetallesPedidosViewSet, ProductoViewSet
+from main.api import ClientesViewSet, PedidosViewSet, DetallesPedidosViewSet, ProductoViewSet, pedidos_simplificados, pedido_detalle
 from main.api_auth_admin import AdminLoginAPIView
 
 
@@ -27,7 +27,7 @@ urlpatterns = [
     # Autenticación
     path('login/', views.login_view, name="login_view"), 
     path('register/', views.register, name="register"), 
-    path('logout/', views.logout_view, name='logout'),
+    path('logout/', views.logout_view, name='logout_view'),
 
     # Paneles
     path('dashboard/', views.dashboard, name="dashboard"),
@@ -75,9 +75,13 @@ urlpatterns = [
     path('superusers/<int:pk>/eliminar/', views.superuser_delete, name='superuser_delete'),
     
 
-    path('api/', include(router.urls)),
 
+    #API DESKTOP APP
+
+    path('api/', include(router.urls)),
     path('api/admin-login/', AdminLoginAPIView.as_view(), name='admin_login'),
+    path('api/pedidos-simplificados/', pedidos_simplificados, name='pedidos_simplificados'),
+    path('api/pedidos-detalle/<int:id_pedido>/', pedido_detalle, name='pedido_detalle'),
 
     
     
