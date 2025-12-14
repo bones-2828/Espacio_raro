@@ -2,7 +2,6 @@ from rest_framework import serializers, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.response import Response
-from rest_framework.authentication import TokenAuthentication
 from .models import Clientes, Pedidos, Detalles_pedidos, Producto
 
 # ============================================================
@@ -111,28 +110,24 @@ class PedidoDetalleSerializer(serializers.ModelSerializer):
 # ============================================================
 
 class ClientesViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     queryset = Clientes.objects.all().order_by('id')
     serializer_class = ClientesSerializer
 
 
-class PedidosViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
+class PedidosViewSet(viewsets.ModelViewSet):    
     permission_classes = [IsAuthenticated]
     queryset = Pedidos.objects.all().order_by('id_pedido')
     serializer_class = PedidosSerializer
 
 
-class DetallesPedidosViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
+class DetallesPedidosViewSet(viewsets.ModelViewSet):    
     permission_classes = [IsAuthenticated]
     queryset = Detalles_pedidos.objects.all().order_by('id_detalle')
     serializer_class = DetallesPedidosSerializer
 
 
-class ProductoViewSet(viewsets.ModelViewSet):
-    authentication_classes = [TokenAuthentication]
+class ProductoViewSet(viewsets.ModelViewSet):    
     permission_classes = [IsAuthenticated]
     queryset = Producto.objects.all().order_by('id_producto')
     serializer_class = ProductoSerializer
@@ -147,7 +142,6 @@ class ProductoViewSet(viewsets.ModelViewSet):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
 def pedidos_simplificados(request):
     pedidos = Pedidos.objects.select_related("cliente").all()
     serializer = PedidoSimplificadoSerializer(pedidos, many=True)
@@ -157,7 +151,6 @@ def pedidos_simplificados(request):
 #DETALLE DE UN PEDIDO
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-@authentication_classes([TokenAuthentication])
 def pedido_detalle(request, id_pedido):
 
     try:

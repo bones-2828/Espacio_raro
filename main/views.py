@@ -11,7 +11,6 @@ from io import BytesIO
 from django.utils import timezone
 from decimal import Decimal
 from django.conf import settings
-from rest_framework.authtoken.models import Token
 from .models import Clientes, Producto, Pedidos, Detalles_pedidos
 from .forms import ClientesForm, PedidosForm, DetallePedidosForm, PedidoInvitadoForm
 

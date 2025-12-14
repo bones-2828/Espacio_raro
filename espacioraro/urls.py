@@ -2,8 +2,15 @@ from django.contrib import admin
 from django.urls import path, include
 from main import views
 from rest_framework import routers
+from rest_framework_simplejwt.views import (TokenObtainPairView,TokenRefreshView,)
 from main.api import ClientesViewSet, PedidosViewSet, DetallesPedidosViewSet, ProductoViewSet, pedidos_simplificados, pedido_detalle
-from main.api_auth_admin import AdminLoginAPIView
+from main.jwt_claims import CustomTokenObtainPairSerializer
+from main.api_admin_check import AdminOnlyCheckAPIView
+#from main.api_auth_admin import AdminLoginAPIView #en desuso para login de admins
+
+
+class CustomTokenView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 
 # --- API Router ---
@@ -79,11 +86,21 @@ urlpatterns = [
     #API DESKTOP APP
 
     path('api/', include(router.urls)),
-    path('api/admin-login/', AdminLoginAPIView.as_view(), name='admin_login'),
+    #path('api/admin-login/', AdminLoginAPIView.as_view(), name='admin_login'), en desuso
+
+
+    # --- JWT AUTH ---
+
+    path('api/token/', CustomTokenView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path("api/admin-check/", AdminOnlyCheckAPIView.as_view(), name="admin_check"),
+
+
+
     path('api/pedidos-simplificados/', pedidos_simplificados, name='pedidos_simplificados'),
     path('api/pedidos-detalle/<int:id_pedido>/', pedido_detalle, name='pedido_detalle'),
 
-    
+
     
 ]
 
