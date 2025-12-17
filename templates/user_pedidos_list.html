@@ -90,8 +90,7 @@
                     <tr>
                         <th>ID Pedido</th>
                         <th>Fecha</th>
-                        <th>Estado</th>
-                        <th>Precio Total</th>
+                        <th>Estado</th>                        
                     </tr>
                 </thead>
 
@@ -100,8 +99,7 @@
                     <tr>
                         <td>#{{ pedido.id_pedido }}</td>
                         <td>{{ pedido.fecha_inicio|date:"d/m/Y" }}</td>
-                        <td>{{ pedido.estado }}</td>
-                        <td>${{ pedido.precio_total }}</td>
+                        <td>{{ pedido.estado }}</td>                        
                     </tr>
 
                     {% empty %}

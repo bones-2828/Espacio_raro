@@ -42,10 +42,7 @@
       <h1 class="text-center mb-4">Gestión de Clientes</h1>
 
       <!-- Botones superiores uniformados -->
-      <div class="d-flex justify-content-between mb-3 top-buttons">
-        <a href="{% url 'clientes_create' %}" class="btn btn-success btn-sm shadow-sm">
-          ➕ Crear Cliente
-        </a>
+      <div class="d-flex justify-content-between mb-3 top-buttons">        
         <a href="{% url 'dashboard' %}" class="btn btn-dark shadow-sm px-3">
           <i class="bi bi-arrow-left-circle"></i> Volver
         </a>
@@ -70,7 +67,7 @@
           <tbody>
             {% for cliente in clientes %}
             <tr class="{% if cliente.email == 'invitado@demo.cl' %}invitado{% endif %}">
-              <td>{{ cliente.id_cliente }}</td>
+              <td>{{ cliente.id }}</td>
               <td>{{ cliente.nombre }}</td>
               <td>{{ cliente.apellido }}</td>
               <td>{{ cliente.email }}</td>
@@ -78,10 +75,9 @@
               <td>{{ cliente.direccion }}</td>
               <td>{{ cliente.rut }}</td>
               <td>
-                {% if cliente.id_cliente %}
-                  <a href="{% url 'clientes_detail' cliente.id_cliente %}" class="btn btn-outline-info btn-sm mb-1">👁️</a>
-                  <a href="{% url 'clientes_update' cliente.id_cliente %}" class="btn btn-outline-warning btn-sm mb-1">✏️</a>
-                  <a href="{% url 'clientes_delete' cliente.id_cliente %}" 
+                {% if cliente.id %}
+                  <a href="{% url 'clientes_detail' cliente.id %}" class="btn btn-outline-info btn-sm mb-1">👁️</a>                 
+                  <a href="{% url 'clientes_delete' cliente.id %}" 
                      class="btn btn-outline-danger btn-sm"
                      onclick="return confirm('¿Seguro que deseas eliminar este cliente?');">
                      🗑️

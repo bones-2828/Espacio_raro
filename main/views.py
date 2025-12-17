@@ -187,13 +187,21 @@ def productos_create(request):
         producto = Producto(
             nombre=request.POST['nombre'],
             tipo_producto=request.POST['tipo_producto'],
-            talla=request.POST.get('talla', ''),
-            color=request.POST.get('color', ''),
+            talla=request.POST.get('talla') or None,
+            color=request.POST.get('color') or None,
             precio_unitario=request.POST['precio_unitario'],
             cantidad_stock=request.POST['cantidad_stock'],
 
-            stock_critico=request.POST.get('stock_critico', 0),
-            margen_ganancia=request.POST.get('margen_ganancia', 0),
+            stock_critico=(
+                int(request.POST['stock_critico'])
+                if request.POST.get('stock_critico')
+                else None
+            ),
+            margen_ganancia=(
+                int(request.POST['margen_ganancia'])
+                if request.POST.get('margen_ganancia')
+                else None
+            ),
 
             distribuidor=request.POST.get('distribuidor', ''),
             contacto_distribuidor=request.POST.get('contacto_distribuidor', '')
@@ -211,15 +219,19 @@ def productos_update(request, id_producto):
     producto = get_object_or_404(Producto, id_producto=id_producto)
 
     if request.method == 'POST':
-        campos = [
-            'nombre', 'tipo_producto', 'talla', 'color',
-            'precio_unitario', 'cantidad_stock',
-            'stock_critico', 'margen_ganancia',
-            'distribuidor', 'contacto_distribuidor'
-        ]
 
-        for campo in campos:
-            setattr(producto, campo, request.POST.get(campo, getattr(producto, campo)))
+        producto.nombre = request.POST['nombre']
+        producto.tipo_producto = request.POST['tipo_producto']
+        producto.talla = request.POST.get('talla') or None
+        producto.color = request.POST.get('color') or None
+        producto.precio_unitario = request.POST['precio_unitario']
+        producto.cantidad_stock = request.POST['cantidad_stock']        
+        stock_critico = request.POST.get('stock_critico')
+        producto.stock_critico = stock_critico if stock_critico else None
+        margen = request.POST.get('margen_ganancia')
+        producto.margen_ganancia = margen if margen else None
+        producto.distribuidor = request.POST.get('distribuidor') or None
+        producto.contacto_distribuidor = request.POST.get('contacto_distribuidor') or None
 
         producto.save()
         messages.success(request, 'Producto actualizado correctamente.')

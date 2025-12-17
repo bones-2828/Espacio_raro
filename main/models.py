@@ -17,7 +17,7 @@ class Clientes(models.Model):
     nombre = models.CharField(max_length=25)
     apellido = models.CharField(max_length=25, blank=True, null=True)
     email = models.EmailField(unique=True)
-    telefono = models.CharField(max_length=12, blank=True, null=True)
+    telefono = models.CharField(max_length=12)
     direccion = models.CharField(max_length=100, blank=True, null=True)
     rut = models.CharField(max_length=12, blank=True, null=True, default=None)
 
@@ -31,10 +31,10 @@ class Producto(models.Model):
     tipo_producto = models.CharField(max_length=100)
     talla = models.CharField(max_length=50, blank=True, null=True)
     color = models.CharField(max_length=20, blank=True, null=True)
-    precio_unitario = models.DecimalField(max_digits=10, decimal_places=2)
+    precio_unitario = models.IntegerField()
     cantidad_stock = models.IntegerField(default=0)
-    stock_critico = models.IntegerField(default=0)
-    margen_ganancia = models.IntegerField(default=0)
+    stock_critico = models.IntegerField(blank=True, null=True)
+    margen_ganancia = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
     distribuidor = models.CharField(max_length=30, blank=True, null=True)
     contacto_distribuidor = models.CharField(max_length=50, blank=True, null=True)
 
@@ -48,8 +48,7 @@ class Pedidos(models.Model):
     fecha_inicio = models.DateTimeField(auto_now_add=True)
     fecha_entrega = models.DateField(blank=True, null=True)
     fecha_termino = models.DateField(blank=True, null=True)
-    estado = models.CharField(max_length=50, default="Pendiente")
-    precio_total = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0.00"))
+    estado = models.CharField(max_length=50, default="Pendiente de manufacturar")    
     mensaje = models.TextField(blank=True, null=True)
     imagen = models.ImageField(upload_to="imagenes_pedidos/", blank=True, null=True)
 
@@ -66,8 +65,7 @@ class Pedidos(models.Model):
             f"Correo: {self.cliente.email}\n"
             f"Dirección: {self.cliente.direccion or '(no especificada)'}\n"
             f"RUT: {self.cliente.rut}\n"
-            f"Productos: {productos}\n"
-            f"Total: ${self.precio_total}\n"
+            f"Productos: {productos}\n"            
             f"Mensaje: {self.mensaje or '(sin mensaje)'}\n"
             f"Estado: {self.estado}\n"
             f"Fecha del pedido: {self.fecha_inicio.strftime('%d/%m/%Y %H:%M')}"
@@ -87,17 +85,8 @@ class Detalles_pedidos(models.Model):
     pedido = models.ForeignKey(Pedidos, on_delete=models.CASCADE, related_name="detalles")
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE, related_name="detalles")
     cantidad = models.PositiveIntegerField(default=1)
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    subtotal = models.DecimalField(max_digits=10, decimal_places=0)
     email_usuario = models.EmailField(null=True, blank=True)
 
     def __str__(self):
         return f"Detalle #{self.id_detalle} - Pedido {self.pedido.id_pedido}"
-
-    def save(self, *args, **kwargs):
-        if self.producto:
-            self.subtotal = Decimal(self.cantidad) * self.producto.precio_unitario
-        super().save(*args, **kwargs)
-
-        total = sum(det.subtotal for det in self.pedido.detalles.all())
-        self.pedido.precio_total = total
-        self.pedido.save(update_fields=["precio_total"])

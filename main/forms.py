@@ -44,6 +44,22 @@ class ClientesForm(BaseStyledForm):
 
 # ---------- FORMULARIO PEDIDOS ----------
 class PedidosForm(forms.ModelForm):
+    
+    ESTADOS_PEDIDO = [
+            ('Pendiente de manufacturar', 'Pendiente de manufacturar'),
+            ('En proceso de manufactura', 'En proceso de manufactura'),
+            ('Listo para entregar', 'Listo para entregar'),
+            ('Pedido entregado', 'Pedido entregado'),
+            ('Archivado', 'Archivado'),
+            ('Pedido cancelado', 'Pedido cancelado')
+        ]
+
+    estado = forms.ChoiceField(
+            choices=ESTADOS_PEDIDO,
+            widget=forms.Select(attrs={'class':'form-control'})
+        )
+
+
     class Meta:
         model = Pedidos
         fields = '__all__'
@@ -51,9 +67,7 @@ class PedidosForm(forms.ModelForm):
             'cliente': forms.Select(attrs={'class': 'form-control'}),
             'fecha_inicio': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'fecha_entrega': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'fecha_termino': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'estado': forms.TextInput(attrs={'class': 'form-control'}),
-            'precio_total': forms.NumberInput(attrs={'class': 'form-control'}),
+            'fecha_termino': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),                        
             'mensaje': forms.Textarea(attrs={'class': 'form-control'}),
             'imagen': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }

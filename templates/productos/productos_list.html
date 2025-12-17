@@ -45,43 +45,44 @@
       </thead>
 
       <tbody>
-        {% for producto in productos %}
-        <tr>
-          <td>{{ producto.id_producto }}</td>
-          <td>{{ producto.nombre }}</td>
-          <td>{{ producto.tipo_producto }}</td>
-          <td>{{ producto.talla }}</td>
-          <td>{{ producto.color }}</td>
-          <td>${{ producto.precio_unitario }}</td>
-          <td>{{ producto.cantidad_stock }}</td>
-          <td>{{ producto.stock_critico }}</td>
-          <td>{{ producto.distribuidor }}</td>
-          <td>{{ producto.contacto_distribuidor }}</td>
-          <td>{{ producto.margen_ganancia }}%</td> <!-- 🔥 NUEVO -->
+  {% for producto in productos %}
+  <tr>
+    <td>{{ producto.id_producto }}</td>
+    <td>{{ producto.nombre }}</td>
+    <td>{{ producto.tipo_producto }}</td>
+    <td>{{ producto.talla|default:"No registrado" }}</td>
+    <td>{{ producto.color|default:"No registrado" }}</td>
+    <td>${{ producto.precio_unitario }}</td>
+    <td>{{ producto.cantidad_stock }}</td>
+    <td>{{ producto.stock_critico|default:"No registrado" }}</td>
+    <td>{{ producto.distribuidor|default:"No registrado" }}</td>
+    <td>{{ producto.contacto_distribuidor|default:"No registrado" }}</td>
+    <td>
+      {{ producto.margen_ganancia|default:"No registrado" }}
+      {% if producto.margen_ganancia %}%{% endif %}
+    </td>
 
-          <td>
-            <!-- Editar -->
-            <a href="{% url 'productos_update' producto.id_producto %}"
-               class="btn btn-warning btn-sm me-1 shadow-sm">
-              <i class="bi bi-pencil-square"></i>
-            </a>
+    <td>
+      <a href="{% url 'productos_update' producto.id_producto %}"
+         class="btn btn-warning btn-sm me-1 shadow-sm">
+        <i class="bi bi-pencil-square"></i>
+      </a>
 
-            <!-- Eliminar -->
-            <a href="{% url 'productos_delete' producto.id_producto %}"
-               class="btn btn-danger btn-sm shadow-sm"
-               onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
-              <i class="bi bi-trash"></i>
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr>
-          <td colspan="12" class="text-muted py-3">
-            No hay productos registrados.
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
+      <a href="{% url 'productos_delete' producto.id_producto %}"
+         class="btn btn-danger btn-sm shadow-sm"
+         onclick="return confirm('¿Seguro que deseas eliminar este producto?');">
+        <i class="bi bi-trash"></i>
+      </a>
+    </td>
+  </tr>
+  {% empty %}
+  <tr>
+    <td colspan="12" class="text-muted py-3">
+      No hay productos registrados.
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
 
     </table>
   </div>

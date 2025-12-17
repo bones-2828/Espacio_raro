@@ -49,10 +49,8 @@ urlpatterns = [
     path('user/confirm/', views.user_confirm, name='user_confirm'),
 
     # CRUD Clientes
-    path('clientes/', views.clientes_list, name='clientes_list'),
-    path('clientes/nuevo/', views.clientes_create, name='clientes_create'),
-    path('clientes/<int:pk>/', views.clientes_detail, name='clientes_detail'),
-    path('clientes/<int:pk>/editar/', views.clientes_update, name='clientes_update'),
+    path('clientes/', views.clientes_list, name='clientes_list'),    
+    path('clientes/<int:pk>/', views.clientes_detail, name='clientes_detail'),    
     path('clientes/<int:pk>/eliminar/', views.clientes_delete, name='clientes_delete'),
     
     # CRUD Productos
@@ -62,21 +60,20 @@ urlpatterns = [
     path('productos/eliminar/<int:id_producto>/', views.productos_delete, name='productos_delete'),
     
     # CRUD Pedidos
-    path('pedidos/', views.pedidos_list, name='pedidos_list'),
-    path('pedidos/nuevo/', views.pedidos_create, name='pedidos_create'),
+    path('pedidos/', views.pedidos_list, name='pedidos_list'),    
     path('pedidos/<int:pk>/', views.pedidos_detail, name='pedidos_detail'),
     path('pedidos/<int:pk>/editar/', views.pedidos_update, name='pedidos_update'),
     path('pedidos/<int:pk>/eliminar/', views.pedidos_delete, name='pedidos_delete'),
 
     # CRUD Detalles de Pedidos
     path('detalles_pedidos/', views.detalles_pedidos_list, name='detalles_pedidos_list'),
-    path('detalles_pedidos/nuevo/', views.detalles_pedidos_create, name='detalles_pedidos_create'),
     path('detalles_pedidos/<int:pk>/editar/', views.detalles_pedidos_update, name='detalles_pedidos_update'),
     path('detalles_pedidos/<int:pk>/eliminar/', views.detalles_pedidos_delete, name='detalles_pedidos_delete'),
     
+
+
     #CRUD superusuarios
-    
-    # --- CRUD Superusuarios ---
+        
     path('superusers/', views.superuser_list, name='superuser_list'),
     path('superusers/nuevo/', views.superuser_create, name='superuser_create'),
     path('superusers/<int:pk>/eliminar/', views.superuser_delete, name='superuser_delete'),
