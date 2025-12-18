@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Realizado</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed !important;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-box {
+            max-width: 650px;
+            background: #ffffffee;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="success-box text-center">
+
+    <div class="success-icon mb-3">
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
+
+    <h2 class="text-success fw-bold mb-3">¡Pedido realizado con éxito!</h2>
+
+    <p class="text-secondary fs-5">
+        ¡Gracias por preferirnos! Hemos recibido tu pedido y te contactaremos pronto a través de tu correo electrónico.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <a href="{% url 'homepage' %}" class="btn btn-primary px-4">
+            <i class="bi bi-house-door"></i> Menú principal
+        </a>
+
+        <a href="{% url 'quickorder' %}" class="btn btn-success px-4">
+            <i class="bi bi-plus-circle"></i> Hacer otro pedido
+        </a>
+
+	<a href="{% url 'user_dashboard' %}" class="btn btn-success px-4">
+            <i class="bi bi-arrow-left-short"></i> Volver a panel de cliente
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
