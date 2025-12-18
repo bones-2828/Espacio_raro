@@ -491,6 +491,44 @@ def order(request):
         producto.cantidad_stock -= cantidad
         producto.save()
 
+                # ---------------- EMAIL PEDIDO RÁPIDO ----------------
+        
+        fecha_formateada = timezone.localtime().strftime("%d/%m/%Y")
+                
+        body = f"""
+        NUEVO PEDIDO RÁPIDO 
+
+        Cliente: {nombre}
+        Correo: {email_cliente}
+        RUT: {rut}
+        Dirección: {direccion}
+
+        Producto: {producto.nombre}
+        Precio unitario: ${producto.precio_unitario}
+        Cantidad: {cantidad}
+        Subtotal: ${subtotal}
+
+        Mensaje:
+        {mensaje or 'Sin mensaje'}
+
+        Fecha: {fecha_formateada}
+        """
+
+        email_msg = EmailMessage(
+            subject='Nuevo pedido rápido — Espacio Raro',
+            body=body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=['pedidosespacioraro@gmail.com'],
+        )
+
+        if imagen:
+            email_msg.attach(imagen.name, imagen.read(), imagen.content_type)
+
+        try:
+            email_msg.send(fail_silently=False)
+        except Exception as e:
+            print("ERROR EMAIL PEDIDO RÁPIDO:", e)        
+
         messages.success(request, "Pedido realizado correctamente.")
         return redirect('pedido_exitoso')
 
@@ -593,6 +631,47 @@ def user_quickorder(request):
 
         producto.cantidad_stock -= cantidad
         producto.save()
+        
+        
+                # ---------------- EMAIL PEDIDO USUARIO ----------------
+
+        fecha_formateada = timezone.localtime().strftime("%d/%m/%Y")
+
+        body = f"""
+
+        NUEVO PEDIDO
+
+        Cliente: {cliente.nombre}
+        Correo: {cliente.email}
+        RUT: {cliente.rut}
+        Dirección: {cliente.direccion}
+
+        Producto: {producto.nombre}
+        Precio unitario: ${producto.precio_unitario}
+        Cantidad: {cantidad}
+        Subtotal: ${subtotal}
+
+        Mensaje:
+        {mensaje or 'Sin mensaje'}
+
+        Fecha: {fecha_formateada}
+        """
+
+        email_msg = EmailMessage(
+            subject=f'Nuevo pedido de {cliente.nombre} — Espacio Raro',
+            body=body,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=['pedidosespacioraro@gmail.com'],
+        )
+
+        if imagen:
+            email_msg.attach(imagen.name, imagen.read(), imagen.content_type)
+
+        try:
+            email_msg.send(fail_silently=False)
+        except Exception as e:
+            print("ERROR EMAIL PEDIDO USUARIO:", e)
+
 
         messages.success(request, "Pedido realizado correctamente.")
         return redirect("user_order_success")
