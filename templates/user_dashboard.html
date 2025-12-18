@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Panel de Usuario</title>
+  <title>Panel de Cliente</title>
   <link rel="stylesheet" href="{% static 'css/admin_login.css' %}">
 
   <style>
@@ -104,7 +104,7 @@
     <div class="login-card">
 
       <h1>Bienvenido, {{ request.user.username }}</h1>
-      <p>Este es tu panel de usuario.</p>
+      <p>Este es tu panel de cliente.</p>
 
       <ul>
         <li><a href="{% url 'user_pedidos_list' %}" class="menu-btn">Ver mis pedidos</a></li>

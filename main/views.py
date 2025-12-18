@@ -397,28 +397,28 @@ def superuser_delete(request, pk):
 
 def guardar_detalle_pedido(request):
     if request.method == 'POST':
-        fullName = request.POST.get('fullName')
+        full_name = request.POST.get('fullName')
         address = request.POST.get('address')
         email = request.POST.get('email')
         rut = request.POST.get('rut')
         message = request.POST.get('message')
         product = request.POST.get('productType')
 
-        cliente_invitado, _ = Clientes.objects.get_or_create(
-            email='invitado@demo.cl',
-            defaults={'nombre': 'Invitado', 'apellido': 'Público', 'telefono': 'N/A'}
+        cliente, _ = Clientes.objects.get_or_create(
+            email=email,
+            defaults={
+                'nombre': full_name,
+                'telefono': 'N/A',
+                'direccion': address,
+                'rut': rut
+            }
         )
 
-        try:
-            producto = Producto.objects.get(nombre__iexact=product)
-        except Producto.DoesNotExist:
-            return JsonResponse({'error': 'El producto no existe'}, status=400)
+        producto = get_object_or_404(Producto, nombre__iexact=product)
 
         pedido = Pedidos.objects.create(
-            cliente=cliente_invitado,
-            fecha_inicio=timezone.now().date(),
-            estado='pendiente',
-            precio_total=Decimal(producto.precio_unitario)
+            cliente=cliente,
+            estado="Pendiente de manufacturar"
         )
 
         Detalles_pedidos.objects.create(
@@ -428,25 +428,6 @@ def guardar_detalle_pedido(request):
             subtotal=producto.precio_unitario,
             email_usuario=email
         )
-
-        try:
-            send_mail(
-                subject=f'Nuevo pedido recibido - {producto.nombre}',
-                message=(
-                    f"Pedido recibido:\n\n"
-                    f"Cliente: {fullName}\n"
-                    f"Correo: {email}\n"
-                    f"Dirección: {address}\n"
-                    f"RUT: {rut}\n"
-                    f"Producto: {producto.nombre}\n"
-                    f"Mensaje: {message}\n"
-                ),
-                from_email='tuservidor@tudominio.cl',
-                to=['destino@tudominio.cl'],
-                fail_silently=False,
-            )
-        except:
-            pass
 
         return JsonResponse({'success': True})
 
@@ -466,112 +447,61 @@ def order(request):
         mensaje = request.POST.get('mensaje')
         imagen = request.FILES.get('imagen')
 
-        # Validación de producto
         try:
             producto = Producto.objects.get(id_producto=producto_id)
-        except Producto.DoesNotExist:
-            messages.error(request, "El producto seleccionado no existe.")
-            return redirect('quickorder')
-
-        # Validación de cantidad
-        try:
             cantidad = int(cantidad)
             if cantidad < 1:
                 raise ValueError
         except:
-            messages.error(request, "La cantidad ingresada no es válida.")
+            messages.error(request, "Producto o cantidad inválidos.")
             return redirect('quickorder')
 
-        # Validación de stock
         if cantidad > producto.cantidad_stock:
             messages.error(
                 request,
-                f"No puedes pedir {cantidad} unidades. Solo hay {producto.cantidad_stock} en stock."
+                f"No hay stock suficiente ({producto.cantidad_stock})."
             )
             return redirect('quickorder')
 
-        # Calcular el total
-        total = Decimal(producto.precio_unitario) * cantidad
-
-        # Cliente invitado
-        cliente_invitado, _ = Clientes.objects.get_or_create(
+        cliente, _ = Clientes.objects.get_or_create(
             email=email_cliente,
             defaults={
                 'nombre': nombre,
-                'apellido': '',
                 'rut': rut,
                 'telefono': 'N/A',
                 'direccion': direccion
             }
         )
 
-        # Crear el pedido
         pedido = Pedidos.objects.create(
-            cliente=cliente_invitado,
-            fecha_inicio=timezone.now(),
-            estado="Pendiente",
-            precio_total=total
+            cliente=cliente,
+            estado="Pendiente de manufacturar"
         )
 
-        # Crear detalle
+        subtotal = Decimal(producto.precio_unitario) * cantidad
+
         Detalles_pedidos.objects.create(
             pedido=pedido,
             producto=producto,
             cantidad=cantidad,
-            subtotal=total,
+            subtotal=subtotal,
             email_usuario=email_cliente
         )
 
-        # Descontar stock
         producto.cantidad_stock -= cantidad
         producto.save()
 
-        # Email
-        contenido = f"""
-        NUEVO PEDIDO
-
-        Cliente: {nombre}
-        Correo: {email_cliente}
-        RUT: {rut}
-        Dirección: {direccion}
-
-        Producto: {producto.nombre}
-        Precio unitario: ${producto.precio_unitario}
-        Cantidad: {cantidad}
-        Total: ${total}
-
-        Mensaje:
-        {mensaje or 'Sin mensaje'}
-        """
-
-        email = EmailMessage(
-            subject='Nuevo Pedido — Espacio Raro',
-            body=contenido,
-            from_email='tuservidor@gmail.com',
-            to=['pedidosespacioraro@gmail.com'],
-        )
-
-        if imagen:
-            email.attach(imagen.name, imagen.read(), imagen.content_type)
-
-        try:
-            email.send()
-            messages.success(request, 'Pedido enviado correctamente.')
-        except:
-            messages.warning(request, 'El pedido se guardó, pero ocurrió un error al enviar el correo.')
-
+        messages.success(request, "Pedido realizado correctamente.")
         return redirect('pedido_exitoso')
 
     return render(request, 'quickorder.html', {'productos': productos})
+
 
 
 def pedido_exitoso(request):
     return render(request, "quickorder_success.html")
 
 
-# ---------------------------
-# PERFIL DE USUARIO
-# ---------------------------
 
 @login_required(login_url='login_view')
 def user_pedidos_list(request):
@@ -580,31 +510,31 @@ def user_pedidos_list(request):
         pedidos = Pedidos.objects.filter(cliente=cliente).order_by('-fecha_inicio')
     except Clientes.DoesNotExist:
         pedidos = []
+
     return render(request, 'user_pedidos_list.html', {'pedidos': pedidos})
+
 
 
 @login_required(login_url='login_view')
 def user_pedido_detail(request, pk):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-        pedido = Pedidos.objects.get(pk=pk, cliente=cliente)
-        detalles = pedido.detalles.all()
-    except:
-        return redirect('user_pedidos_list')
-    
-    return render(request, 'user_pedido_detail.html', {'pedido': pedido, 'detalles': detalles})
+    cliente = get_object_or_404(Clientes, email=request.user.email)
+    pedido = get_object_or_404(Pedidos, pk=pk, cliente=cliente)
+    detalles = pedido.detalles.all()
+
+    return render(request, 'user_pedido_detail.html', {
+        'pedido': pedido,
+        'detalles': detalles
+    })
+
 
 
 @login_required(login_url='login_view')
 def user_perfil_edit(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        cliente = Clientes.objects.create(
-            nombre=request.user.username,
-            email=request.user.email
-        )
-    
+    cliente, _ = Clientes.objects.get_or_create(
+        email=request.user.email,
+        defaults={'nombre': request.user.username}
+    )
+
     if request.method == "POST":
         cliente.nombre = request.POST.get('nombre', cliente.nombre)
         cliente.apellido = request.POST.get('apellido', cliente.apellido)
@@ -612,20 +542,17 @@ def user_perfil_edit(request):
         cliente.telefono = request.POST.get('telefono', cliente.telefono)
         cliente.direccion = request.POST.get('direccion', cliente.direccion)
         cliente.save()
+
         messages.success(request, "Perfil actualizado.")
         return redirect('user_dashboard')
-    
+
     return render(request, 'user_perfil_edit.html', {'cliente': cliente})
+
 
 
 @login_required(login_url='login_view')
 def user_quickorder(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        messages.error(request, "Tu perfil no existe.")
-        return redirect('user_dashboard')
-
+    cliente = get_object_or_404(Clientes, email=request.user.email)
     productos = Producto.objects.all()
 
     if request.method == "POST":
@@ -634,69 +561,34 @@ def user_quickorder(request):
         mensaje = request.POST.get("mensaje")
         imagen = request.FILES.get("imagen")
 
-        producto = Producto.objects.get(id_producto=producto_id)
+        producto = get_object_or_404(Producto, id_producto=producto_id)
 
         if cantidad > producto.cantidad_stock:
             messages.error(
                 request,
-                f"No puedes pedir {cantidad} unidades. Solo hay {producto.cantidad_stock} en stock."
+                f"No hay stock suficiente ({producto.cantidad_stock})."
             )
             return redirect("user_quickorder")
 
-        total = Decimal(producto.precio_unitario) * cantidad
-
         pedido = Pedidos.objects.create(
             cliente=cliente,
-            fecha_inicio=timezone.now(),
-            estado="Pendiente",
-            precio_total=total
+            estado="Pendiente de manufacturar"
         )
+
+        subtotal = Decimal(producto.precio_unitario) * cantidad
 
         Detalles_pedidos.objects.create(
             pedido=pedido,
             producto=producto,
             cantidad=cantidad,
-            subtotal=total,
+            subtotal=subtotal,
             email_usuario=cliente.email
         )
 
         producto.cantidad_stock -= cantidad
         producto.save()
 
-        body = f"""
-        NUEVO PEDIDO RÁPIDO
-
-        Cliente: {cliente.nombre}
-        Correo: {cliente.email}
-        RUT: {cliente.rut}
-        Dirección: {cliente.direccion}
-
-        Producto: {producto.nombre}
-        Cantidad: {cantidad}
-        Total: ${total}
-
-        Mensaje:
-        {mensaje or 'Sin mensaje'}
-
-        Fecha: {pedido.fecha_inicio}
-        """
-
-        email = EmailMessage(
-            subject=f"Nuevo pedido rápido de {cliente.nombre}",
-            body=body,
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            to=["pedidosespacioraro@gmail.com"],
-        )
-
-        if imagen:
-            email.attach(imagen.name, imagen.read(), imagen.content_type)
-
-        try:
-            email.send()
-            messages.success(request, "Tu pedido fue enviado.")
-        except:
-            messages.warning(request, "El pedido se guardó, pero el correo falló.")
-
+        messages.success(request, "Pedido realizado correctamente.")
         return redirect("pedido_exitoso")
 
     return render(request, "user_quickorder.html", {
@@ -705,11 +597,17 @@ def user_quickorder(request):
     })
 
 
+
+
 @login_required(login_url='login_view')
 def user_confirm(request):
-    try:
-        cliente = Clientes.objects.get(email=request.user.email)
-    except Clientes.DoesNotExist:
-        return redirect("user_dashboard")
-
+    cliente = get_object_or_404(Clientes, email=request.user.email)
     return render(request, "user_confirm.html", {"cliente": cliente})
+
+
+
+
+
+
+
+

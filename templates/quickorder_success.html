@@ -52,12 +52,16 @@
     </p>
 
     <div class="d-flex justify-content-center gap-3 mt-4">
-        <a href="{% url 'user_dashboard' %}" class="btn btn-primary px-4">
+        <a href="{% url 'homepage' %}" class="btn btn-primary px-4">
             <i class="bi bi-house-door"></i> Menú principal
         </a>
 
         <a href="{% url 'quickorder' %}" class="btn btn-success px-4">
             <i class="bi bi-plus-circle"></i> Hacer otro pedido
+        </a>
+
+	<a href="{% url 'user_dashboard' %}" class="btn btn-success px-4">
+            <i class="bi bi-arrow-left-short"></i> Volver a panel de cliente
         </a>
     </div>
 
