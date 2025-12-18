@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedido Realizado</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    <style>
+        body {
+            background: url("{% static 'img/fondo.png' %}") center/cover no-repeat fixed !important;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-box {
+            max-width: 650px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #28a745;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="success-box text-center">
+
+    <div class="success-icon mb-3">
+        <i class="bi bi-check-circle-fill"></i>
+    </div>
+
+    <h2 class="text-success fw-bold mb-3">
+        ¡Pedido realizado con éxito!
+    </h2>
+
+    <p class="text-secondary fs-5">
+        Tu pedido fue registrado correctamente en tu cuenta.
+        <br>
+        Puedes revisarlo desde tu panel de usuario.
+    </p>
+
+    <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+
+        <a href="{% url 'user_dashboard' %}" class="btn btn-primary px-4">
+            <i class="bi bi-speedometer2"></i> Ir a mi panel
+        </a>
+
+        <a href="{% url 'user_pedidos_list' %}" class="btn btn-secondary px-4">
+            <i class="bi bi-list-check"></i> Ver mis pedidos
+        </a>
+
+        <a href="{% url 'user_quickorder' %}" class="btn btn-success px-4">
+            <i class="bi bi-plus-circle"></i> Hacer otro pedido
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

@@ -47,6 +47,7 @@ urlpatterns = [
     # Crear pedido desde cuenta de usuario
     path('user/quickorder/', views.user_quickorder, name='user_quickorder'),
     path('user/confirm/', views.user_confirm, name='user_confirm'),
+    path('user/order_success/', views.user_order_success, name='user_order_success'),
 
     # CRUD Clientes
     path('clientes/', views.clientes_list, name='clientes_list'),    

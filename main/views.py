@@ -504,6 +504,12 @@ def pedido_exitoso(request):
 
 
 @login_required(login_url='login_view')
+def user_order_success(request):
+    return render(request, "user_order_success.html")
+
+
+
+@login_required(login_url='login_view')
 def user_pedidos_list(request):
     try:
         cliente = Clientes.objects.get(email=request.user.email)
@@ -589,7 +595,7 @@ def user_quickorder(request):
         producto.save()
 
         messages.success(request, "Pedido realizado correctamente.")
-        return redirect("pedido_exitoso")
+        return redirect("user_order_success")
 
     return render(request, "user_quickorder.html", {
         "cliente": cliente,
